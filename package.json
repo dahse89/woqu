@@ -1,0 +1,27 @@
+{
+  "name": "WoQu",
+  "version": "0.0.1",
+  "description": "Shell tool to track and organise work in process",
+  "main": "woqu",
+  "scripts": {
+    "test": "./woqu todo"
+  },
+  "repository": {
+    "type": "git",
+    "url": ".git"
+  },
+  "keywords": [
+    "track",
+    "work",
+    "tasks",
+    "shell",
+    "nodejs",
+    "sqlite"
+  ],
+  "author": "Philipp Dahse",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "sqlite3": "~3.0.5",
+    "moment": "~2.9.0"
+  }
+}
