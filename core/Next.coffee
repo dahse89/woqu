@@ -28,6 +28,6 @@ Next = do ->
     db.init (db)->
       db.getCurrentTask (task) ->
         task.increasePostponed()
-        db.updateTask task,master.getTodo
+        db.updateTask task,master.getModel('todo').init([],db,master)
 
 module.exports = Next

@@ -32,7 +32,7 @@
         return db.init(function(db) {
           return db.getCurrentTask(function(task) {
             task.increasePostponed();
-            return db.updateTask(task, master.getTodo);
+            return db.updateTask(task, master.getModel('todo').init([], db, master));
           });
         });
       }

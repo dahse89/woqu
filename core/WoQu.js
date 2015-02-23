@@ -3,9 +3,10 @@
   var WoQu;
 
   WoQu = (function() {
-    var Task, args, db, subCommandsDir;
+    var Task, args, db, fs, subCommandsDir;
     db = require('./Db.js');
     Task = require('./model/Task.js');
+    fs = require('fs');
     args = null;
     subCommandsDir = './';
     return {
@@ -14,10 +15,8 @@
       */
 
       run: function() {
-        var model;
         args = WoQu.getArgs();
-        model = WoQu.toCoreModelName(args[0]);
-        return require(subCommandsDir + model).init(args.slice(1), db, WoQu);
+        return WoQu.getModel(args[0]).init(args.slice(1), db, WoQu);
       },
       /**
       * ensure that sub comment is in model name format
@@ -45,6 +44,25 @@
 
       getDb: function() {
         return db;
+      },
+      /**
+      * get sub model
+      * @return subModel_ref
+      */
+
+      getModel: function(str) {
+        var model, path;
+        model = WoQu.toCoreModelName(str);
+        path = subCommandsDir + model + '.js';
+        if (fs.existsSync(path)) {
+          return require(path);
+        } else {
+          return {
+            init: function() {
+              return console.error("invalid command: " + str);
+            }
+          };
+        }
       }
     };
   })();
