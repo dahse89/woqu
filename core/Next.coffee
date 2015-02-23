@@ -14,10 +14,10 @@ Next = do ->
     * @param _db Db_ref
     * @param _master WoQu_ref
   ###
-  init: (_args,_db,_master) ->
+  init: (_args,_master) ->
     args = _args
-    db = _db
     master = _master
+    db = master.getDb()
     Next.moveCurTaskBackwards()
 
   ###*
@@ -28,6 +28,6 @@ Next = do ->
     db.init (db)->
       db.getCurrentTask (task) ->
         task.increasePostponed()
-        db.updateTask task,master.getModel('todo').init([],db,master)
+        db.updateTask task,master.getModel('todo').init([],master)
 
 module.exports = Next

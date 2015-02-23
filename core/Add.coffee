@@ -15,10 +15,10 @@ Add = do ->
   * @param _db Db_ref
   * @param _master WoQu_ref
   ###
-  init: (_args,_db,_master) ->
+  init: (_args,_master) ->
     args = _args
-    db = _db
     master = _master
+    db = master.getDb()
     if args.length is 1
       task = new Task()
       task.setDescription(args[0])

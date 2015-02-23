@@ -17,10 +17,10 @@
         * @param _master WoQu_ref
       */
 
-      init: function(_args, _db, _master) {
+      init: function(_args, _master) {
         args = _args;
-        db = _db;
         master = _master;
+        db = master.getDb();
         return Next.moveCurTaskBackwards();
       },
       /**
@@ -32,7 +32,7 @@
         return db.init(function(db) {
           return db.getCurrentTask(function(task) {
             task.increasePostponed();
-            return db.updateTask(task, master.getModel('todo').init([], db, master));
+            return db.updateTask(task, master.getModel('todo').init([], master));
           });
         });
       }

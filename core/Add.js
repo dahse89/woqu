@@ -17,11 +17,11 @@
       * @param _master WoQu_ref
       */
 
-      init: function(_args, _db, _master) {
+      init: function(_args, _master) {
         var task;
         args = _args;
-        db = _db;
         master = _master;
+        db = master.getDb();
         if (args.length === 1) {
           task = new Task();
           task.setDescription(args[0]);

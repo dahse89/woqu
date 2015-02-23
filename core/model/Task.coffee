@@ -1,6 +1,6 @@
 # usings
-moment = moment = require('moment')
-
+moment  = require 'moment'
+clc = require 'cli-color'
 ###*
 * Task
 * data model representing a task that have to be done
@@ -118,11 +118,18 @@ class Task
   * @return string
   ###
   toString: ->
+
+    create_date_label = moment(@created_at).format('DD.MM.YYYY HH:mm:ss')
+    task_lable = clc.white('Task: #')
+    hardBopen = clc.red('[')
+    hardBclose = clc.red(']')
+    id = clc.blue(@id)
+    done_at_label = if @done_at then "#{hardBopen}done#{hardBclose}: " + moment(@done_at).format('DD.MM.YYYY HH:mm:ss') else ' '
     """
-      Task ##{@id} From: #{moment(@created_at).format('DD.MM.YYYY HH:mm:ss')}
+      #{task_lable}#{id} From: #{create_date_label}
       #{@description}
-      [postponed]: #{@postponed}
-      #{if @done_at then '[done]: ' + moment(@done_at).format('DD.MM.YYYY HH:mm:ss') else ' '}
+      #{hardBopen}postponed#{hardBclose}: #{@postponed}
+      #{done_at_label}
     """
 
 module.exports = Task

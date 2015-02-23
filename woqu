@@ -1,2 +1,3 @@
 #!/usr/bin/env node
-require('./core/WoQu.js').run();
+var devMode = true;
+require('./core/WoQu.js').run(devMode);

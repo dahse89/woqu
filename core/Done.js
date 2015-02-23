@@ -17,10 +17,10 @@
       * @param _master WoQu_ref
       */
 
-      init: function(_args, _db, _master) {
+      init: function(_args, _master) {
         args = _args;
-        db = _db;
         master = _master;
+        db = master.getDb();
         return Done.setDone();
       },
       /**

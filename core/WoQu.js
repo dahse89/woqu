@@ -3,20 +3,24 @@
   var WoQu;
 
   WoQu = (function() {
-    var Task, args, db, fs, subCommandsDir;
+    var Task, args, clicolor, coreDir, db, devMode, fs, subCommandsDir;
     db = require('./Db.js');
     Task = require('./model/Task.js');
     fs = require('fs');
+    clicolor = require('cli-color');
     args = null;
     subCommandsDir = './';
+    coreDir = './core/';
+    devMode = true;
     return {
       /**
       * start woqu app and handle args
       */
 
-      run: function() {
+      run: function(_devMode) {
+        devMode = _devMode;
         args = WoQu.getArgs();
-        return WoQu.getModel(args[0]).init(args.slice(1), db, WoQu);
+        return WoQu.getModel(args[0]).init(args.slice(1), WoQu);
       },
       /**
       * ensure that sub comment is in model name format
@@ -51,11 +55,12 @@
       */
 
       getModel: function(str) {
-        var model, path;
+        var model, path, requirePath;
         model = WoQu.toCoreModelName(str);
-        path = subCommandsDir + model + '.js';
+        path = coreDir + model + '.js';
+        requirePath = subCommandsDir + model;
         if (fs.existsSync(path)) {
-          return require(path);
+          return require(requirePath);
         } else {
           return {
             init: function() {
@@ -63,6 +68,22 @@
             }
           };
         }
+      },
+      /**
+      * check if app is in development mode
+      * @return boolean
+      */
+
+      isDevMode: function() {
+        return devMode;
+      },
+      /**
+      * cli color handle getter
+      * @return cli-color_ref
+      */
+
+      getCliColor: function() {
+        return clicolor;
       }
     };
   })();

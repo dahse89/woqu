@@ -3,17 +3,21 @@ WoQu = do ->
   db   = require './Db.js'
   Task = require './model/Task.js'
   fs   = require 'fs'
+  clicolor = require 'cli-color'
 
   args = null
   subCommandsDir = './'
+  coreDir = './core/'
+  devMode = true
 
   #public
   ###*
   * start woqu app and handle args
   ###
-  run: ->
+  run: (_devMode) ->
+    devMode = _devMode
     args = WoQu.getArgs()
-    WoQu.getModel(args[0]).init(args.slice(1),db,WoQu)
+    WoQu.getModel(args[0]).init(args.slice(1),WoQu)
 
   ###*
   * ensure that sub comment is in model name format
@@ -42,8 +46,22 @@ WoQu = do ->
   ###
   getModel: (str) ->
     model = WoQu.toCoreModelName(str)
-    path = subCommandsDir + model + '.js'
-    if fs.existsSync(path) then require(path) else init: ->
+    path = coreDir + model + '.js'
+    requirePath = subCommandsDir + model
+    if fs.existsSync(path) then require(requirePath) else init: ->
       console.error "invalid command: #{str}"
+
+  ###*
+  * check if app is in development mode
+  * @return boolean
+  ###
+  isDevMode: -> devMode
+
+  ###*
+  * cli color handle getter
+  * @return cli-color_ref
+  ###
+  getCliColor: -> clicolor
+
 
 module.exports = WoQu
