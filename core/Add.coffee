@@ -1,18 +1,34 @@
-db = require './Db.js'
-Task = require './model/Task.js'
+Add = do ->
+  # privates
+  Task = require './model/Task.js'
+  db = null
+  master = null
+  args = null
 
-Add =
-  args: null,
 
-  init: (args) ->
-    Add.args = args
-    if Add.args.length is 1
+  # public
+
+  ###*
+  * init Add model, args are passed
+  * to receive model options
+  * @param _args array
+  * @param _db Db_ref
+  * @param _master WoQu_ref
+  ###
+  init: (_args,_db,_master) ->
+    args = _args
+    db = _db
+    master = _master
+    if args.length is 1
       task = new Task()
-      task.setDescription(Add.args[0])
+      task.setDescription(args[0])
       task.setCreatedAt(new Date())
       task.setPostponed(0)
       Add.addTask(task)
 
+  ###*
+  * add a Task to database
+  ###
   addTask: (task) ->
     db.init (db) ->
       db.insertTask task, ->

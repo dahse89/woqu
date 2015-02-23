@@ -1,14 +1,14 @@
 {
   "name": "WoQu",
   "version": "0.0.1",
-  "description": "Shell tool to track and organise work in process",
+  "description": "Shell tool to track and organize work in process",
   "main": "woqu",
   "scripts": {
     "test": "./woqu todo"
   },
   "repository": {
     "type": "git",
-    "url": ".git"
+    "url": "https://github.com/dahse89/woqu.git"
   },
   "keywords": [
     "track",
