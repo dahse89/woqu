@@ -1,16 +1,32 @@
-sqlite3 = require('sqlite3').verbose();
-Task = require './model/Task.js'
+Db = do ->
+  #privates
+  sqlite3 = require('sqlite3').verbose();
+  Task = require './model/Task.js'
+  name = "woqu.db"
+  conn = null
+  ready = null
 
-Db =
-  name: "woqu.db"
-  conn: null
-  ready: null
+  ###*
+  * create connection and init db class
+  * @param cb function
+  ###
   init: (cb)->
-    Db.ready = cb;
-    Db.conn = new sqlite3.Database(Db.name,Db.createTables)
+    ready = cb;
+    conn = new sqlite3.Database(name,Db.createTables)
+
+  ###*
+  * create needed tables
+  * @param err sqlite_error
+  ###
   createTables: (err)->
     console.error(err) if err
-    Db.conn.run "
+    Db.createTaskTable()
+
+  ###*
+  * create Task table
+  ###
+  createTaskTable: ->
+    conn.run "
       CREATE TABLE IF NOT EXISTS tasks(
         id INTEGER PRIMARY KEY,
         description TEXT,
@@ -20,10 +36,16 @@ Db =
       )
     ", (err)->
       console.error(err) if err
-      Db.ready(Db)
+      ready(Db)
 
+
+  ###*
+  * get a single Task by id
+  * @param id string
+  * @paran cb function
+  ###
   getTaskById: (id,cb)->
-    Db.conn.each "
+    conn.each "
       SELECT
         id,
         description,
@@ -37,8 +59,13 @@ Db =
       task = new Task();
       task.init(row)
       cb(task)
+
+  ###*
+  * get current Task that people have do
+  * @param cb function
+  ###
   getCurrentTask: (cb) ->
-    Db.conn.each "
+    conn.each "
       SELECT
         id,
         description,
@@ -54,8 +81,13 @@ Db =
       task.init(row)
       cb(task)
 
+  ###*
+  * update a Task in sqlite db
+  * @param task Task
+  * @param cb function
+  ###
   updateTask: (task, cb) ->
-    stmt = Db.conn.prepare "
+    stmt = conn.prepare "
       UPDATE tasks SET
         description = $description,
         created_at = $created_at,
@@ -65,8 +97,12 @@ Db =
     "
     stmt.run(task.to$Obj(),cb)
 
+  ###*
+  * insert a new task to sqlite db
+  * @param task Task
+  ###
   insertTask: (task,cb) ->
-    stmt = Db.conn.prepare "
+    stmt = conn.prepare "
       INSERT INTO tasks (
         id,
         description,
