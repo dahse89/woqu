@@ -4,10 +4,11 @@ WoQu = do ->
   Task = require './model/Task.js'
   fs   = require 'fs'
   clicolor = require 'cli-color'
+  IO = require './IO.js'
 
   args = null
-  subCommandsDir = './'
-  coreDir = './core/'
+  subCommandsDir = './cmds/'
+  coreDir = './core/cmds/'
   devMode = true
 
   #public
@@ -39,6 +40,11 @@ WoQu = do ->
   * @return Db_ref
   ###
   getDb: -> db
+  ###*
+  * get IO model reference
+  * @return IO_ref
+  ###
+  getDb: -> IO
 
   ###*
   * get sub model
@@ -62,6 +68,18 @@ WoQu = do ->
   * @return cli-color_ref
   ###
   getCliColor: -> clicolor
+
+  ###*
+  # inline Model Getter
+  ###
+  coreModels: (names...)->
+    models = []
+    for i,name of names
+      models.push(db) if (name is 'db')
+      models.push(IO) if (name is 'IO')
+      models.push(fs) if (name is 'fs')
+      models.push(clicolor) if (name is 'clicolor')
+    models
 
 
 module.exports = WoQu

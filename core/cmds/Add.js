@@ -3,9 +3,8 @@
   var Add;
 
   Add = (function() {
-    var IO, Task, args, db, master;
-    Task = require('./model/Task.js');
-    IO = require('./IO.js');
+    var Task, args, db, master;
+    Task = require('../model/Task.js');
     db = null;
     master = null;
     args = null;
@@ -19,13 +18,13 @@
       */
 
       init: function(_args, _master) {
-        var task;
+        var IO, task, _ref;
         args = _args;
         master = _master;
-        db = master.getDb();
+        _ref = master.coreModels("db", "IO"), db = _ref[0], IO = _ref[1];
         if (args.length === 0) {
-          IO.ask("Description: ", function(answer) {
-            return console.log("Thank you for your valuable feedback:" + answer);
+          IO.readLine("Description: ", function(answer) {
+            return IO.println("Thank you for your valuable feedback:" + answer);
           });
           return;
         }
@@ -34,18 +33,21 @@
           task.setDescription(args[0]);
           task.setCreatedAt(new Date());
           task.setPostponed(0);
-          return Add.addTask(task);
+          return Add.addTask(task, function() {
+            return process.exit();
+          });
         }
       },
       /**
       * add a Task to database
       */
 
-      addTask: function(task) {
+      addTask: function(task, cb) {
         return db.init(function(db) {
           return db.insertTask(task, function() {
             task.setId(this.lastID);
-            return console.log("Task #" + (task.getId()) + " added");
+            console.log("Task #" + (task.getId()) + " added");
+            return cb();
           });
         });
       }

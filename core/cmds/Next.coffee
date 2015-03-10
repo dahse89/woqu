@@ -1,6 +1,6 @@
 Next = do ->
   # privates
-  Task = require './model/Task.js'
+  Task = require '../model/Task.js'
   db = null
   master = null
   args = null

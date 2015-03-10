@@ -3,18 +3,35 @@
   var IO;
 
   IO = (function() {
-    var readline, rl;
+    var readline, rl, term_ui;
     readline = require('readline');
+    term_ui = require('./term-ui/TermUI.js');
     rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout
     });
     return {
       /**
+      * print string in shell
+      *
+      */
+
+      print: function(str) {
+        return term_ui.out(str);
+      },
+      /**
+      * print string in shell with newline
+      *
+      */
+
+      println: function(str) {
+        return term_ui.out("" + str + "\n");
+      },
+      /**
       * this provides an read line input for the shell
       */
 
-      ask: function(question, cb) {
+      readLine: function(question, cb) {
         return rl.question(question, function(answer) {
           cb(answer);
           return rl.close();
