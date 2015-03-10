@@ -1,0 +1,31 @@
+woqu add
+woqu add {text}
+woqu add --detailed
+woqu add -d
+
+woqu todo [ -{-a}ll [-{-e}xclude string] ]
+woqu todo -a
+woqu todo --all
+woqu todo --from-to 2
+woqu todo --from-to 2 4
+woqu todo -ft 2
+woqu todo -ft 2 4
+woqu todo --overview
+woqu todo -o
+
+
+woqu done
+woqu next
+
+woqu track start
+woqu track pause
+woqu track pause --reason "get some coffee"
+woqu track pause -r "get some coffee"
+woqu track info
+wuqo track stop
+wuqo track abort
+wuqo track exclude
+wuqo track exclude --time "2h 30m" --reason "i get into skype first"
+wuqo track exclude -t "2h 30m" -r "i get into skype first"
+
+
