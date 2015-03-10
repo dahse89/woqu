@@ -2,6 +2,7 @@ Todo = do ->
   # privates
   Task = require '../model/Task.js'
   db = null
+  IO = null
   master = null
   args = null
 
@@ -17,7 +18,7 @@ Todo = do ->
   init: (_args,_master) ->
     args = _args
     master = _master
-    db = master.getDb()
+    [db, IO] = master.coreModels "db","IO"
     Todo.getTodo()
 
   ###*
@@ -26,6 +27,6 @@ Todo = do ->
   getTodo: (task) ->
     db.init (db)->
       db.getCurrentTask (task)->
-        console.log(task.toString())
-
+        IO.println task.toString()
+        process.exit()
 module.exports = Todo

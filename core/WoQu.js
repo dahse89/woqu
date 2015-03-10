@@ -56,7 +56,7 @@
       * @return IO_ref
       */
 
-      getDb: function() {
+      getIO: function() {
         return IO;
       },
       /**

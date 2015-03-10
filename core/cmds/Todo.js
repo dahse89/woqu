@@ -3,9 +3,10 @@
   var Todo;
 
   Todo = (function() {
-    var Task, args, db, master;
+    var IO, Task, args, db, master;
     Task = require('../model/Task.js');
     db = null;
+    IO = null;
     master = null;
     args = null;
     return {
@@ -18,9 +19,10 @@
       */
 
       init: function(_args, _master) {
+        var _ref;
         args = _args;
         master = _master;
-        db = master.getDb();
+        _ref = master.coreModels("db", "IO"), db = _ref[0], IO = _ref[1];
         return Todo.getTodo();
       },
       /**
@@ -30,7 +32,8 @@
       getTodo: function(task) {
         return db.init(function(db) {
           return db.getCurrentTask(function(task) {
-            return console.log(task.toString());
+            IO.println(task.toString());
+            return process.exit();
           });
         });
       }

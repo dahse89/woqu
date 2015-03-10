@@ -2,6 +2,7 @@ Done = do ->
   # privates
   Task = require '../model/Task.js'
   db = null
+  IO = null
   master = null
   args = null
 
@@ -17,7 +18,7 @@ Done = do ->
   init: (_args,_master) ->
     args = _args
     master = _master
-    db = master.getDb()
+    [IO,db] = master.coreModels "IO", "db"
     Done.setDone()
 
   ###*
@@ -28,6 +29,7 @@ Done = do ->
     db.getCurrentTask (task) ->
       task.setDoneAt(new Date())
       db.updateTask task,()->
-        console.log(task.toString())
+        IO.println task.toString()
+        process.exit();
 
 module.exports = Done

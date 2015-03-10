@@ -44,7 +44,7 @@ WoQu = do ->
   * get IO model reference
   * @return IO_ref
   ###
-  getDb: -> IO
+  getIO: -> IO
 
   ###*
   * get sub model
