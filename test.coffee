@@ -1,37 +1,26 @@
-class CmdInterface
-  init: -> console.log("super")
+###
+  { id: null,
+  description: null,
+  created_at: null,
+  postponed: null,
+  done_at: null }
 
-class Test extends CmdInterface
-  constructor: ->
-    @val = null
-
-  init: ->
-    super
-    console.log("bla")
-  test: (v) ->
-    super
-    @val = v
-
-  getVal: -> @val
-
-class Multiton
-  @singletions =
-    Test: Test
-  @instances = {}
-  @get: (name, args...) -> @instances[name] ||= new @singletions[name] args...
-
-  @x: (args...) -> x[y] ||= y args...
+###
+Sequelize = require('sequelize')
+sequelize = new Sequelize 'Test', '', '',
+  host: 'localhost',
+  dialect: 'sqlite',
+  storage: './test.db'
 
 
+User = sequelize.define 'user'
+  first_name: type: Sequelize.STRING
+  last_name: type: Sequelize.STRING
 
 
-
-t = Multiton.get('Test')
-t.init();
-t.test("lol")
-console.log(t.getVal())
-
-x = Multiton.get('Test')
-console.log(x.getVal())
-
-console.log(t is x)
+User.sync(fore: true).then () ->
+  User.create
+    first_name: 'Philipp2',
+    last_name: 'Dahse2',
+    moreStuff: "we",
+    someWeDoNotNeed: 12

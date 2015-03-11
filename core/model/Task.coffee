@@ -16,6 +16,30 @@ class Task
     @created_at = null
     @postponed = null
     @done_at = null
+    @created_at = null
+    @updated_at = null
+
+
+  fromOrm: (ormModel) ->
+    dataValues = ormModel.dataValues
+    @setId(dataValues.task_id)
+    @setDescription(dataValues.description)
+    @setPostponed(dataValues.postponed)
+    @setDoneAt(dataValues.done_at)
+    @setCreateAt(dataValues.createdAt)
+    @setUpdateAt(dataValues.updatedAt)
+
+
+  setCreateAt: (created_at) ->
+    @created_at = created_at
+    @
+  getCreateAt: -> @created_at
+
+  setUpdateAt: (updated_at) ->
+    @updated_at = updated_at
+    @
+  getUpdateAt: -> @updated_at
+
 
   ###*
   * id getter

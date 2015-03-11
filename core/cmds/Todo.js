@@ -21,12 +21,17 @@
 
 
     Todo.prototype.getTodo = function() {
-      var IO;
+      var IO, Task, db;
       IO = this.IO;
-      return this.db.init(function(db) {
-        return db.getCurrentTask(function(task) {
-          IO.println(task.toString());
-          return process.exit();
+      Task = this.master.getTask();
+      db = new this.db(this.master);
+      return db.init(function(orm, models) {
+        return models.Task.find({
+          where: ["done_at is not null"],
+          order: [["(task_id+postponed)", "ASC"], ["postponed", "ASC"], ["task_id", "ASC"]],
+          limit: 1
+        }).then(function(res) {
+          return console.log(res);
         });
       });
     };
@@ -36,5 +41,19 @@
   })();
 
   module.exports = Todo;
+
+  /*
+        SELECT
+        id,
+        description,
+        created_at,
+        postponed,
+        done_at
+      FROM tasks
+      WHERE done_at IS NULL
+      ORDER by (id+postponed),postponed,id ASC
+      LIMIT 1
+  */
+
 
 }).call(this);

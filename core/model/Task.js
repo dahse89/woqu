@@ -24,7 +24,38 @@
       this.created_at = null;
       this.postponed = null;
       this.done_at = null;
+      this.created_at = null;
+      this.updated_at = null;
     }
+
+    Task.prototype.fromOrm = function(ormModel) {
+      var dataValues;
+      dataValues = ormModel.dataValues;
+      this.setId(dataValues.task_id);
+      this.setDescription(dataValues.description);
+      this.setPostponed(dataValues.postponed);
+      this.setDoneAt(dataValues.done_at);
+      this.setCreateAt(dataValues.createdAt);
+      return this.setUpdateAt(dataValues.updatedAt);
+    };
+
+    Task.prototype.setCreateAt = function(created_at) {
+      this.created_at = created_at;
+      return this;
+    };
+
+    Task.prototype.getCreateAt = function() {
+      return this.created_at;
+    };
+
+    Task.prototype.setUpdateAt = function(updated_at) {
+      this.updated_at = updated_at;
+      return this;
+    };
+
+    Task.prototype.getUpdateAt = function() {
+      return this.updated_at;
+    };
 
     /**
     * id getter

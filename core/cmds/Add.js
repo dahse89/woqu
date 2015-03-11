@@ -36,12 +36,15 @@
 
 
     Add.prototype.addTask = function(task, cb) {
-      var IO;
+      var IO, Task, db;
       IO = this.IO;
-      return this.db.init(function(db) {
-        return db.insertTask(task, function() {
-          task.setId(this.lastID);
-          IO.println("Task #" + (task.getId()) + " added");
+      Task = this.master.getTask();
+      db = new this.db(this.master);
+      return db.init(function(orm, models) {
+        models.Task.find();
+        return models.Task.create(task).then(function(res) {
+          task.fromOrm(res);
+          IO.println("Add Task: #" + (task.getId()));
           return cb();
         });
       });

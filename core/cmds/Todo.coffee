@@ -11,9 +11,32 @@ module.exports = class Todo
   ###
   getTodo: () ->
     IO = @IO
-    @db.init (db)->
-      db.getCurrentTask (task)->
-        IO.println task.toString()
-        process.exit()
+    Task = @master.getTask()
+    db = new @db(@master)
+    db.init (orm,models)->
+      models.Task.find(
+        where: ["done_at is not null"]
+        order: [
+          ["(task_id+postponed)","ASC"],
+          ["postponed","ASC"],
+          ["task_id","ASC"],
+        ]
+        limit: 1
+      ).then (res)->
+        console.log(res)
+
 
 module.exports = Todo
+
+###
+      SELECT
+      id,
+      description,
+      created_at,
+      postponed,
+      done_at
+    FROM tasks
+    WHERE done_at IS NULL
+    ORDER by (id+postponed),postponed,id ASC
+    LIMIT 1
+###

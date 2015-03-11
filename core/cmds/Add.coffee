@@ -23,10 +23,14 @@ module.exports = class Add
   ###
   addTask: (task,cb) ->
     IO = @IO
-    @db.init (db) ->
-      db.insertTask task, ->
-        task.setId(@.lastID)
-        IO.println "Task ##{task.getId()} added"
+    Task = @master.getTask()
+    db = new @db(@master)
+    db.init (orm,models) ->
+      models.Task.find()
+
+      models.Task.create(task).then (res) ->
+        task.fromOrm(res)
+        IO.println("Add Task: ##{task.getId()}")
         cb()
 
 module.exports = Add
