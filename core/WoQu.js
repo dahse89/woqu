@@ -4,15 +4,14 @@
     __slice = [].slice;
 
   WoQu = (function() {
-    var IO, Task, args, clicolor, coreDir, db, devMode, fs, subCommandsDir;
+    var CmdsFactory, IO, Task, args, clicolor, db, devMode, fs;
     db = require('./Db.js');
     Task = require('./model/Task.js');
     fs = require('fs');
     clicolor = require('cli-color');
     IO = require('./IO.js');
+    CmdsFactory = require('./CmdsFactory.js');
     args = null;
-    subCommandsDir = './cmds/';
-    coreDir = './core/cmds/';
     devMode = true;
     return {
       /**
@@ -20,20 +19,14 @@
       */
 
       run: function(_devMode) {
+        var cmd;
         devMode = _devMode;
         args = WoQu.getArgs();
-        return WoQu.getModel(args[0]).init(args.slice(1), WoQu);
+        cmd = CmdsFactory.get(WoQu, args[0], args.slice(1));
+        return cmd.init();
       },
-      /**
-      * ensure that sub comment is in model name format
-      * (first char uppercase )
-      */
-
-      toCoreModelName: function(str) {
-        var f;
-        str += '';
-        f = str.charAt(0).toUpperCase();
-        return f + str.substr(1).toLowerCase();
+      factory: function() {
+        return CmdsFactory;
       },
       /**
       * get relevant args
@@ -60,24 +53,12 @@
         return IO;
       },
       /**
-      * get sub model
-      * @return subModel_ref
+      * get Task class
+      * @return Task
       */
 
-      getModel: function(str) {
-        var model, path, requirePath;
-        model = WoQu.toCoreModelName(str);
-        path = coreDir + model + '.js';
-        requirePath = subCommandsDir + model;
-        if (fs.existsSync(path)) {
-          return require(requirePath);
-        } else {
-          return {
-            init: function() {
-              return console.error("invalid command: " + str);
-            }
-          };
-        }
+      getTask: function() {
+        return Task;
       },
       /**
       * check if app is in development mode

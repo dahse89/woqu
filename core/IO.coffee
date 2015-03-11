@@ -1,4 +1,3 @@
-
 IO = do ->
   readline = require 'readline'
   term_ui = require './term-ui/TermUI.js'
@@ -23,8 +22,9 @@ IO = do ->
   * this provides an read line input for the shell
   ###
   readLine: (question,cb) ->
+    self = @
     rl.question question, (answer) ->
-      cb(answer)
+      cb(answer,self)
       rl.close()
 
 module.exports = IO

@@ -2,42 +2,37 @@
 (function() {
   var Todo;
 
-  Todo = (function() {
-    var IO, Task, args, db, master;
-    Task = require('../model/Task.js');
-    db = null;
-    IO = null;
-    master = null;
-    args = null;
-    return {
-      /**
-      * init Todo model, args are passed
-      * to receive model options
-      * @param _args array
-      * @param _db Db_ref
-      * @param _master WoQu_ref
-      */
+  module.exports = Todo = (function() {
 
-      init: function(_args, _master) {
-        var _ref;
-        args = _args;
-        master = _master;
-        _ref = master.coreModels("db", "IO"), db = _ref[0], IO = _ref[1];
-        return Todo.getTodo();
-      },
-      /**
-      * get current Task from database
-      */
+    function Todo(master, args) {
+      this.master = master;
+      this.args = args;
+    }
 
-      getTodo: function(task) {
-        return db.init(function(db) {
-          return db.getCurrentTask(function(task) {
-            IO.println(task.toString());
-            return process.exit();
-          });
-        });
-      }
+    Todo.prototype.init = function() {
+      var _ref;
+      _ref = this.master.coreModels("db", "IO"), this.db = _ref[0], this.IO = _ref[1];
+      return this.getTodo();
     };
+
+    /**
+    * get current Task from database
+    */
+
+
+    Todo.prototype.getTodo = function() {
+      var IO;
+      IO = this.IO;
+      return this.db.init(function(db) {
+        return db.getCurrentTask(function(task) {
+          IO.println(task.toString());
+          return process.exit();
+        });
+      });
+    };
+
+    return Todo;
+
   })();
 
   module.exports = Todo;

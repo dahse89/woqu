@@ -2,35 +2,28 @@
 (function() {
   var Done;
 
-  Done = (function() {
-    var IO, Task, args, db, master;
-    Task = require('../model/Task.js');
-    db = null;
-    IO = null;
-    master = null;
-    args = null;
-    return {
-      /**
-      * init Done model, args are passed
-      * to receive model options
-      * @param _args array
-      * @param _db Db_ref
-      * @param _master WoQu_ref
-      */
+  module.exports = Done = (function() {
 
-      init: function(_args, _master) {
-        var _ref;
-        args = _args;
-        master = _master;
-        _ref = master.coreModels("IO", "db"), IO = _ref[0], db = _ref[1];
-        return Done.setDone();
-      },
-      /**
-      * set current Task to done and print it
-      */
+    function Done(master, args) {
+      this.master = master;
+      this.args = args;
+    }
 
-      setDone: function(task) {
-        db.init(function(db) {});
+    Done.prototype.init = function() {
+      var _ref;
+      _ref = this.master.coreModels("IO", "db"), this.IO = _ref[0], this.db = _ref[1];
+      return this.setDone();
+    };
+
+    /**
+    * set current Task to done and print it
+    */
+
+
+    Done.prototype.setDone = function() {
+      var IO;
+      IO = this.IO;
+      return this.db.init(function(db) {
         return db.getCurrentTask(function(task) {
           task.setDoneAt(new Date());
           return db.updateTask(task, function() {
@@ -38,8 +31,11 @@
             return process.exit();
           });
         });
-      }
+      });
     };
+
+    return Done;
+
   })();
 
   module.exports = Done;

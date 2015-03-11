@@ -2,41 +2,40 @@
 (function() {
   var Next;
 
-  Next = (function() {
-    var Task, args, db, master;
-    Task = require('../model/Task.js');
-    db = null;
-    master = null;
-    args = null;
-    return {
-      /**
-        * init Next model, args are passed
-        * to receive model options
-        * @param _args array
-        * @param _db Db_ref
-        * @param _master WoQu_ref
-      */
+  module.exports = Next = (function() {
 
-      init: function(_args, _master) {
-        args = _args;
-        master = _master;
-        db = master.getDb();
-        return Next.moveCurTaskBackwards();
-      },
-      /**
-      * update Task to increase postponed
-      * run woqu todo
-      */
+    function Next(master, args) {
+      this.master = master;
+      this.args = args;
+    }
 
-      moveCurTaskBackwards: function(task) {
-        return db.init(function(db) {
-          return db.getCurrentTask(function(task) {
-            task.increasePostponed();
-            return db.updateTask(task, master.getModel('todo').init([], master));
+    Next.prototype.init = function() {
+      this.db = this.master.getDb();
+      return this.moveCurTaskBackwards();
+    };
+
+    /**
+    * update Task to increase postponed
+    */
+
+
+    Next.prototype.moveCurTaskBackwards = function(task) {
+      var master;
+      master = this.master;
+      return this.db.init(function(db) {
+        return db.getCurrentTask(function(task) {
+          task.increasePostponed();
+          return db.updateTask(task, function() {
+            var todo;
+            todo = master.factory().get(master, 'todo');
+            return todo.init();
           });
         });
-      }
+      });
     };
+
+    return Next;
+
   })();
 
   module.exports = Next;

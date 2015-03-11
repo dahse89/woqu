@@ -2,56 +2,53 @@
 (function() {
   var Add;
 
-  Add = (function() {
-    var Task, args, db, master;
-    Task = require('../model/Task.js');
-    db = null;
-    master = null;
-    args = null;
-    return {
-      /**
-      * init Add model, args are passed
-      * to receive model options
-      * @param _args array
-      * @param _db Db_ref
-      * @param _master WoQu_ref
-      */
+  module.exports = Add = (function() {
 
-      init: function(_args, _master) {
-        var IO, task, _ref;
-        args = _args;
-        master = _master;
-        _ref = master.coreModels("db", "IO"), db = _ref[0], IO = _ref[1];
-        if (args.length === 0) {
-          IO.readLine("Description: ", function(answer) {
-            return IO.println("Thank you for your valuable feedback:" + answer);
-          });
-          return;
-        }
-        if (args.length === 1) {
-          task = new Task();
-          task.setDescription(args[0]);
-          task.setCreatedAt(new Date());
-          task.setPostponed(0);
-          return Add.addTask(task, function() {
-            return process.exit();
-          });
-        }
-      },
-      /**
-      * add a Task to database
-      */
+    function Add(master, args) {
+      this.master = master;
+      this.args = args;
+    }
 
-      addTask: function(task, cb) {
-        return db.init(function(db) {
-          return db.insertTask(task, function() {
-            task.setId(this.lastID);
-            console.log("Task #" + (task.getId()) + " added");
-            return cb();
-          });
+    Add.prototype.init = function() {
+      var Task, task, _ref;
+      _ref = this.master.coreModels("db", "IO"), this.db = _ref[0], this.IO = _ref[1];
+      if (this.args.length === 0) {
+        this.IO.readLine("Description: ", function(answer, IO) {
+          return IO.println("Thank you for your valuable feedback:" + answer);
+        });
+        return;
+      }
+      if (this.args.length === 1) {
+        Task = this.master.getTask();
+        task = new Task();
+        task.setDescription(this.args[0]);
+        task.setCreatedAt(new Date());
+        task.setPostponed(0);
+        return this.addTask(task, function() {
+          return process.exit();
         });
       }
     };
+
+    /**
+    * add a Task to database
+    */
+
+
+    Add.prototype.addTask = function(task, cb) {
+      var IO;
+      IO = this.IO;
+      return this.db.init(function(db) {
+        return db.insertTask(task, function() {
+          task.setId(this.lastID);
+          IO.println("Task #" + (task.getId()) + " added");
+          return cb();
+        });
+      });
+    };
+
+    return Add;
+
   })();
 
   module.exports = Add;

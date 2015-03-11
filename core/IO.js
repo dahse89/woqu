@@ -32,8 +32,10 @@
       */
 
       readLine: function(question, cb) {
+        var self;
+        self = this;
         return rl.question(question, function(answer) {
-          cb(answer);
+          cb(answer, self);
           return rl.close();
         });
       }

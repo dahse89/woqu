@@ -5,10 +5,9 @@ WoQu = do ->
   fs   = require 'fs'
   clicolor = require 'cli-color'
   IO = require './IO.js'
+  CmdsFactory = require './CmdsFactory.js'
 
   args = null
-  subCommandsDir = './cmds/'
-  coreDir = './core/cmds/'
   devMode = true
 
   #public
@@ -18,16 +17,13 @@ WoQu = do ->
   run: (_devMode) ->
     devMode = _devMode
     args = WoQu.getArgs()
-    WoQu.getModel(args[0]).init(args.slice(1),WoQu)
+    cmd = CmdsFactory.get(WoQu,args[0],args.slice(1))
+    cmd.init()
 
-  ###*
-  * ensure that sub comment is in model name format
-  * (first char uppercase )
-  ###
-  toCoreModelName: (str) ->
-    str += ''
-    f = str.charAt(0).toUpperCase()
-    f + str.substr(1).toLowerCase()
+    #WoQu.getModel(args[0]).init(args.slice(1),WoQu)
+
+
+  factory: -> CmdsFactory
 
   ###*
   * get relevant args
@@ -47,15 +43,10 @@ WoQu = do ->
   getIO: -> IO
 
   ###*
-  * get sub model
-  * @return subModel_ref
+  * get Task class
+  * @return Task
   ###
-  getModel: (str) ->
-    model = WoQu.toCoreModelName(str)
-    path = coreDir + model + '.js'
-    requirePath = subCommandsDir + model
-    if fs.existsSync(path) then require(requirePath) else init: ->
-      console.error "invalid command: #{str}"
+  getTask: -> Task
 
   ###*
   * check if app is in development mode
