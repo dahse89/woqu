@@ -3,14 +3,18 @@ module.exports = class CmdsFactory
   @coreDir = './core/cmds/'
   @fs = require 'fs'
   @instances = {}
-  @get: (master, name, args = []) ->
+  @master = null
+
+  @setMaster: (@master) ->
+
+  @get: (name, args = []) ->
     name = @toCoreModelName(name)
 
     if @instances[name]
       return @instances[name]
     else
       model = @getModel(name)
-      new model(master, args)
+      new model(@master, args)
 
   @getCoreDir: -> @coreDir
 

@@ -1,10 +1,13 @@
 WoQu = do ->
   # privates
-  db   = require './Db.js'
+  _Db = require('./Db.js')
+  db   = null
+
   Task = require './model/Task.js'
   fs   = require 'fs'
   clicolor = require 'cli-color'
-  IO = require './IO.js'
+  _IO = require './IO.js'
+  IO = null
   CmdsFactory = require './CmdsFactory.js'
 
   args = null
@@ -15,15 +18,19 @@ WoQu = do ->
   * start woqu app and handle args
   ###
   run: (_devMode) ->
+    db = new _Db(WoQu)
+    IO = new _IO(WoQu)
+    db.init () -> WoQu.ready _devMode
+
+  ready: (_devMode) ->
     devMode = _devMode
     args = WoQu.getArgs()
-    cmd = CmdsFactory.get(WoQu,args[0],args.slice(1))
-    cmd.init()
-
-    #WoQu.getModel(args[0]).init(args.slice(1),WoQu)
+    @factory(args[0],args.slice(1)).init()
 
 
-  factory: -> CmdsFactory
+  factory: (name, args)->
+    CmdsFactory.setMaster(WoQu)
+    CmdsFactory.get(name,args)
 
   ###*
   * get relevant args

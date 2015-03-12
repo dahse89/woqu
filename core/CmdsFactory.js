@@ -14,7 +14,13 @@
 
     CmdsFactory.instances = {};
 
-    CmdsFactory.get = function(master, name, args) {
+    CmdsFactory.master = null;
+
+    CmdsFactory.setMaster = function(master) {
+      this.master = master;
+    };
+
+    CmdsFactory.get = function(name, args) {
       var model;
       if (args == null) {
         args = [];
@@ -24,7 +30,7 @@
         return this.instances[name];
       } else {
         model = this.getModel(name);
-        return new model(master, args);
+        return new model(this.master, args);
       }
     };
 

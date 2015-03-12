@@ -3,27 +3,33 @@ Sqlz = require('sequelize')
 class Db
   constructor: (@master) ->
     @update = false
+    @debugOutput = false
     @models = {}
     @orm = new Sqlz 'Test', '', '',
       host: 'localhost',
       dialect: 'sqlite',
-      storage: './tasks.db'
+      storage: './tasks.db',
+      logging: @debugOutput
 
 
+  getModels: -> @models
+  getOrm: -> @orm
 
   init: (ready) ->
-
-    @models.Task = @orm.define 'task'
-      task_id: type: Sqlz.INTEGER, autoIncrement: true, primaryKey: true
+    taskSchema =
+      id: type: Sqlz.INTEGER, autoIncrement: true, primaryKey: true
       description: type: Sqlz.TEXT
       postponed: type: Sqlz.INTEGER
       done_at: type: Sqlz.DATE
+
+    @models.Task = @orm.define 'task', taskSchema
 
     [models,orm] = [@models,@orm]
     # todo sync chain for all models
     @models.Task.sync(force: @update).then () ->
       ready(orm,models)
 
+module.exports = Db
 
 ###*
 Db = do ->
@@ -123,4 +129,3 @@ insertTask: (task,cb) ->
   "
   stmt.run(task.to$Obj(),cb)
 ###
-module.exports = Db

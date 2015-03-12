@@ -1,3 +1,10 @@
+###*
+  * This is the data model for a task
+  * The object looks a litte bit differnt in the db
+  * Only the values defines in task schema are stored (core/Db)
+  * The model in initialized from orm object using fromOrm() method
+###
+
 # usings
 moment  = require 'moment'
 clc = require 'cli-color'
@@ -10,7 +17,7 @@ class Task
   * class constructor
   * initialize private properies
   ###
-  constructor: ->
+  constructor: (ormDataModel = null)->
     @id = null
     @description = null
     @created_at = null
@@ -19,10 +26,12 @@ class Task
     @created_at = null
     @updated_at = null
 
+    @fromOrm(ormDataModel) if(ormDataModel isnt null)
+
 
   fromOrm: (ormModel) ->
     dataValues = ormModel.dataValues
-    @setId(dataValues.task_id)
+    @setId(dataValues.id)
     @setDescription(dataValues.description)
     @setPostponed(dataValues.postponed)
     @setDoneAt(dataValues.done_at)

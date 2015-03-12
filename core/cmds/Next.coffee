@@ -9,13 +9,11 @@ module.exports = class Next
   ###*
   * update Task to increase postponed
   ###
-  moveCurTaskBackwards: (task) ->
-    master = @master
-    @db.init (db)->
-      db.getCurrentTask (task) ->
-        task.increasePostponed()
-        db.updateTask task,()->
-          todo = master.factory().get(master,'todo')
-          todo.init()
+  moveCurTaskBackwards: () ->
+    todo = @master.factory('todo')
+
+    todo.getCurrentTask (task) ->
+      postponed = parseInt(task.getDataValue("postponed"));
+      task.updateAttributes( postponed: postponed+1).then () -> todo.init()
 
 module.exports = Next

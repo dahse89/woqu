@@ -1,22 +1,27 @@
 module.exports = class Done
 
   constructor: (@master, @args) ->
-
-  init: ->
-
     [@IO,@db] = @master.coreModels "IO", "db"
-    @setDone()
+
+  init: -> @setDone()
 
   ###*
   * set current Task to done and print it
   ###
   setDone: () ->
     IO = @IO
-    @db.init (db)->
-      db.getCurrentTask (task) ->
-        task.setDoneAt(new Date())
-        db.updateTask task,()->
-          IO.println task.toString()
-          process.exit();
+    todo = @master.factory('todo')
+    todo.getCurrentTask (task)->
+
+        attr = done_at: new Date()
+        where = where: id: task.getDataValue("id")
+
+        task.update(attr, where)
+          .then () ->
+            IO.printTaskOrmModel(task)
+            todo.init()
+          .catch (err) ->
+            console.log err
+
 
 module.exports = Done
