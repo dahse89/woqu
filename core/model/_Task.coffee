@@ -1,44 +1,49 @@
 ###*
   * This is the data model for a task
-  * The object looks a little bit different in the db
+  * The object looks a litte bit differnt in the db
   * Only the values defines in task schema are stored (core/Db)
   * The model in initialized from orm object using fromOrm() method
 ###
 
-# using
+# usings
 moment  = require 'moment'
 clc = require 'cli-color'
-
 ###*
- * Task
- * data model representing a task that have to be done
+* Task
+* data model representing a task that have to be done
 ###
-module.exports = class Task extends require './SuperModel'
+class Task
   ###*
-   * class constructor
-   * initialize private properies
+  * class constructor
+  * initialize private properies
   ###
   constructor: (ormDataModel = null)->
-    super(ormDataModel)
+    @id = null
     @description = null
     @postponed = null
     @done_at = null
+    @created_at = null
+    @updated_at = null
 
     @fromOrm(ormDataModel) if(ormDataModel isnt null)
 
 
   fromOrm: (ormModel) ->
     dataValues = ormModel.dataValues
-    @_fromOrm(ormModel)
+    @setId(dataValues.id)
     @setDescription(dataValues.description)
     @setPostponed(dataValues.postponed)
     @setDoneAt(dataValues.done_at)
-
+    @setCreateAt(dataValues.createdAt)
+    @setUpdateAt(dataValues.updatedAt)
 
 
   ###*
    * Getter/ Setter
   ###
+  getId: -> @id
+  setId: (@id) -> @
+
   getDescription: -> @description
   setDescription: (@description) -> @
 
@@ -48,12 +53,18 @@ module.exports = class Task extends require './SuperModel'
   getDoneAt: -> @done_at
   setDoneAt: (@done_at) -> @
 
+  getCreateAt: -> @created_at
+  setCreateAt: (@created_at) -> @
+
+  getUpdateAt: -> @updated_at
+  setUpdateAt: (@updated_at) -> @
+
   increasePostponed: -> @postponed++
 
   ###*
-   * converts an instance of this class to an object
-   * the properties will be the same then in there but
-   * they will all start with $ to use them in sqlite binding
+  * converts an instance of this class to an object
+  * the properties will be the same then in there but
+  * they will all start with $ to use them in sqlite binding
   ###
   to$Obj: ->
     arr = {}
@@ -63,8 +74,8 @@ module.exports = class Task extends require './SuperModel'
     arr
 
   ###*
-   * convert an instance of this class to string
-   * @return string
+  * convert an instance of this class to string
+  * @return string
   ###
   toString: ->
     create_date_label = moment(@created_at).format('DD.MM.YYYY HH:mm:ss')
@@ -79,6 +90,8 @@ module.exports = class Task extends require './SuperModel'
       #{hardBopen}postponed#{hardBclose}: #{@postponed}
       #{done_at_label}
     """
+
+module.exports = Task
 
 
 

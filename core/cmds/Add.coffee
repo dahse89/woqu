@@ -13,7 +13,6 @@ module.exports = class Add
       Task = @master.getTask()
       task = new Task()
       task.setDescription(@args[0])
-      task.setCreatedAt(new Date())
       task.setPostponed(0)
       @addTask task, -> process.exit()
 

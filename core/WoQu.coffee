@@ -4,6 +4,8 @@ WoQu = do ->
   db   = null
 
   Task = require './model/Task.js'
+  LoggedWork = './model/LoggedWork.js'
+
   fs   = require 'fs'
   clicolor = require 'cli-color'
   _IO = require './IO.js'
@@ -56,6 +58,12 @@ WoQu = do ->
   getTask: -> Task
 
   ###*
+  * get LoggedWord class
+  * @return LoggedWord
+  ###
+  getLoggedWord: -> LoggedWord
+
+  ###*
   * check if app is in development mode
   * @return boolean
   ###
@@ -76,6 +84,8 @@ WoQu = do ->
       models.push(db) if (name is 'db')
       models.push(IO) if (name is 'IO')
       models.push(fs) if (name is 'fs')
+      models.push(LoggedWord) if (name is 'LoggedWord')
+      models.push(Task) if (name is 'Task')
       models.push(clicolor) if (name is 'clicolor')
     models
 

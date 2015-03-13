@@ -22,6 +22,7 @@ module.exports = class Todo
     Task = @master.getTask()
     @getCurrentTask (res) ->
       task = new Task(res);
+
       IO.println(task.toString())
       process.exit()
 

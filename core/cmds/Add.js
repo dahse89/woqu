@@ -22,7 +22,6 @@
         Task = this.master.getTask();
         task = new Task();
         task.setDescription(this.args[0]);
-        task.setCreatedAt(new Date());
         task.setPostponed(0);
         return this.addTask(task, function() {
           return process.exit();

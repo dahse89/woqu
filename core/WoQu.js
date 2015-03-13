@@ -4,10 +4,11 @@
     slice = [].slice;
 
   WoQu = (function() {
-    var CmdsFactory, IO, Task, _Db, _IO, args, clicolor, db, devMode, fs;
+    var CmdsFactory, IO, LoggedWork, Task, _Db, _IO, args, clicolor, db, devMode, fs;
     _Db = require('./Db.js');
     db = null;
     Task = require('./model/Task.js');
+    LoggedWork = './model/LoggedWork.js';
     fs = require('fs');
     clicolor = require('cli-color');
     _IO = require('./IO.js');
@@ -70,6 +71,14 @@
       },
 
       /**
+      * get LoggedWord class
+      * @return LoggedWord
+       */
+      getLoggedWord: function() {
+        return LoggedWord;
+      },
+
+      /**
       * check if app is in development mode
       * @return boolean
        */
@@ -102,6 +111,12 @@
           }
           if (name === 'fs') {
             models.push(fs);
+          }
+          if (name === 'LoggedWord') {
+            models.push(LoggedWord);
+          }
+          if (name === 'Task') {
+            models.push(Task);
           }
           if (name === 'clicolor') {
             models.push(clicolor);
