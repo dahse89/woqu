@@ -1,3 +1,4 @@
+#todo use class structur here
 WoQu = do ->
   # privates
   Db = require('./Db.js')
