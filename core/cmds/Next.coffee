@@ -13,7 +13,7 @@ module.exports = class Next
     todo = @master.factory('todo')
 
     todo.getCurrentTask (task) ->
-      postponed = parseInt(task.getDataValue("postponed"));
-      task.updateAttributes( postponed: postponed+1).then () -> todo.init()
+      postponed = task.getDataValue("postponed")
+      task.updateAttributes(postponed:postponed+1).then () -> todo.init()
 
 module.exports = Next

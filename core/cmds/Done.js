@@ -34,7 +34,7 @@
           }
         };
         return task.update(attr, where).then(function() {
-          IO.printTaskOrmModel(task);
+          IO.printTask(task);
           return todo.init();
         })["catch"](function(err) {
           return console.log(err);

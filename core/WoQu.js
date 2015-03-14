@@ -4,11 +4,9 @@
     slice = [].slice;
 
   WoQu = (function() {
-    var CmdsFactory, IO, LoggedWork, Task, _Db, _IO, args, clicolor, db, devMode, fs;
-    _Db = require('./Db.js');
+    var CmdsFactory, Db, IO, _IO, args, clicolor, db, devMode, fs;
+    Db = require('./Db.js');
     db = null;
-    Task = require('./model/Task.js');
-    LoggedWork = './model/LoggedWork.js';
     fs = require('fs');
     clicolor = require('cli-color');
     _IO = require('./IO.js');
@@ -22,11 +20,9 @@
       * start woqu app and handle args
        */
       run: function(_devMode) {
-        db = new _Db(WoQu);
+        db = new Db(WoQu);
         IO = new _IO(WoQu);
-        return db.init(function() {
-          return WoQu.ready(_devMode);
-        });
+        return WoQu.ready(_devMode);
       },
       ready: function(_devMode) {
         devMode = _devMode;
@@ -111,12 +107,6 @@
           }
           if (name === 'fs') {
             models.push(fs);
-          }
-          if (name === 'LoggedWord') {
-            models.push(LoggedWord);
-          }
-          if (name === 'Task') {
-            models.push(Task);
           }
           if (name === 'clicolor') {
             models.push(clicolor);

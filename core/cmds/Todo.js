@@ -15,7 +15,7 @@
     };
 
     Todo.prototype.getCurrentTask = function(cb) {
-      return this.master.getDb().getModels().Task.find({
+      return this.db.getModel('Task').find({
         where: ["done_at is null"],
         order: 'id + postponed, postponed, id ASC',
         limit: 1
@@ -28,13 +28,10 @@
      */
 
     Todo.prototype.getTodo = function() {
-      var IO, Task;
+      var IO;
       IO = this.IO;
-      Task = this.master.getTask();
-      return this.getCurrentTask(function(res) {
-        var task;
-        task = new Task(res);
-        IO.println(task.toString());
+      return this.getCurrentTask(function(task) {
+        IO.printTask(task);
         return process.exit();
       });
     };

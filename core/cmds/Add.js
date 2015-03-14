@@ -11,7 +11,6 @@
     }
 
     Add.prototype.init = function() {
-      var Task, task;
       if (this.args.length === 0) {
         this.IO.readLine("Description: ", function(answer, IO) {
           return IO.println("Thank you for your valuable feedback:" + answer);
@@ -19,13 +18,7 @@
         return;
       }
       if (this.args.length === 1) {
-        Task = this.master.getTask();
-        task = new Task();
-        task.setDescription(this.args[0]);
-        task.setPostponed(0);
-        return this.addTask(task, function() {
-          return process.exit();
-        });
+        return this.addTask(this.args[0]);
       }
     };
 
@@ -34,14 +27,16 @@
     * add a Task to database
      */
 
-    Add.prototype.addTask = function(task, cb) {
-      var IO, Task;
+    Add.prototype.addTask = function(description) {
+      var IO, task;
       IO = this.IO;
-      Task = this.master.getTask();
-      return this.db.getModels().Task.create(task).then(function(res) {
-        task.fromOrm(res);
-        IO.println("Add Task: #" + (task.getId()));
-        return cb();
+      task = this.db.getModel('Task').build({
+        description: description,
+        poststponed: 0
+      });
+      return task.save()["catch"](IO.error).then(function(task) {
+        IO.println("Add Task: #" + (task.getDataValue('id')));
+        return process.exit();
       });
     };
 

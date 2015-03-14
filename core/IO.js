@@ -7,6 +7,8 @@
       this.master = master;
       this.readline = require('readline');
       this.term_ui = require('./term-ui/TermUI.js');
+      this.moment = require('moment');
+      this.clc = require('cli-color');
       this.rl = this.readline.createInterface({
         input: process.stdin,
         output: process.stdout
@@ -18,6 +20,10 @@
       Task = this.master.getTask();
       task = new Task(model);
       return this.println(task.toString());
+    };
+
+    IO.prototype.error = function(msg) {
+      return this.println(msg);
     };
 
 
@@ -52,6 +58,34 @@
         cb(answer, self);
         return self.rl.close();
       });
+    };
+
+    IO.prototype.__date = function(date, format) {
+      if (format == null) {
+        format = 'DD.MM.YYYY HH:mm:ss';
+      }
+      return this.moment(date).format(format);
+    };
+
+
+    /**
+     * convert an instance of task class to string
+     * @return string
+     */
+
+    IO.prototype.printTask = function(task) {
+      var $_, _$, createAtDate, create_date_label, description, done_at, done_at_label, id, idVal, postponed, ref, task_lable;
+      createAtDate = task.getDataValue("createdAt");
+      create_date_label = this.__date(createAtDate);
+      task_lable = this.clc.white('Task: #');
+      ref = [this.clc.red('['), this.clc.red(']')], _$ = ref[0], $_ = ref[1];
+      idVal = task.getDataValue("id");
+      id = this.clc.blue(idVal);
+      done_at = task.getDataValue("done_at");
+      done_at_label = done_at ? (_$ + "done" + $_ + ": ") + this.__date(done_at) : ' ';
+      description = task.getDataValue("description");
+      postponed = task.getDataValue("postponed");
+      return this.println("" + task_lable + id + " From: " + create_date_label + "\n" + description + "\n" + _$ + "postponed" + $_ + ": " + postponed + "\n" + done_at_label);
     };
 
     return IO;

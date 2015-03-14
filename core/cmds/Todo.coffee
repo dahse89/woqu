@@ -6,26 +6,20 @@ module.exports = class Todo
   init: -> @getTodo()
 
   getCurrentTask: (cb) ->
-    @master.getDb().getModels().Task.find(
+    @db.getModel('Task').find(
       where: ["done_at is null"]
       order: 'id + postponed, postponed, id ASC'
       limit: 1
     ).then cb
 
-
-
   ###*
   * get current Task from database
   ###
   getTodo: () ->
+
     IO = @IO
-    Task = @master.getTask()
-    @getCurrentTask (res) ->
-      task = new Task(res);
-
-      IO.println(task.toString())
+    @getCurrentTask (task) ->
+      IO.printTask(task)
       process.exit()
-
-
 
 module.exports = Todo

@@ -18,7 +18,7 @@ module.exports = class Done
 
         task.update(attr, where)
           .then () ->
-            IO.printTaskOrmModel(task)
+            IO.printTask(task)
             todo.init()
           .catch (err) ->
             console.log err

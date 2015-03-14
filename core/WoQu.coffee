@@ -1,11 +1,7 @@
 WoQu = do ->
   # privates
-  _Db = require('./Db.js')
+  Db = require('./Db.js')
   db   = null
-
-  Task = require './model/Task.js'
-  LoggedWork = './model/LoggedWork.js'
-
   fs   = require 'fs'
   clicolor = require 'cli-color'
   _IO = require './IO.js'
@@ -20,9 +16,10 @@ WoQu = do ->
   * start woqu app and handle args
   ###
   run: (_devMode) ->
-    db = new _Db(WoQu)
+    db = new Db(WoQu)
     IO = new _IO(WoQu)
-    db.init () -> WoQu.ready _devMode
+    #db.init () -> WoQu.ready _devMode
+    WoQu.ready _devMode
 
   ready: (_devMode) ->
     devMode = _devMode
@@ -84,8 +81,6 @@ WoQu = do ->
       models.push(db) if (name is 'db')
       models.push(IO) if (name is 'IO')
       models.push(fs) if (name is 'fs')
-      models.push(LoggedWord) if (name is 'LoggedWord')
-      models.push(Task) if (name is 'Task')
       models.push(clicolor) if (name is 'clicolor')
     models
 

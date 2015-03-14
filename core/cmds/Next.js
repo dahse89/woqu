@@ -23,7 +23,7 @@
       todo = this.master.factory('todo');
       return todo.getCurrentTask(function(task) {
         var postponed;
-        postponed = parseInt(task.getDataValue("postponed"));
+        postponed = task.getDataValue("postponed");
         return task.updateAttributes({
           postponed: postponed + 1
         }).then(function() {

@@ -9,6 +9,7 @@ module.exports = class Log
   * set current Task to done and print it
   ###
   logInfo: () ->
+
     @IO.println("jf lösjfl ajsfjlöasj fl")
 
 

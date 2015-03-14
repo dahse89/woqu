@@ -10,22 +10,23 @@ module.exports = class Add
         IO.println "Thank you for your valuable feedback:#{answer}"
       return;
     if @args.length is 1
-      Task = @master.getTask()
-      task = new Task()
-      task.setDescription(@args[0])
-      task.setPostponed(0)
-      @addTask task, -> process.exit()
+      @addTask(@args[0])
 
   ###*
   * add a Task to database
   ###
-  addTask: (task,cb) ->
+  addTask: (description) ->
     IO = @IO
-    Task = @master.getTask()
+    task = @db.getModel('Task').build(
+      description: description,
+      poststponed: 0
+    )
 
-    @db.getModels().Task.create(task).then (res) ->
-      task.fromOrm(res)
-      IO.println("Add Task: ##{task.getId()}")
-      cb()
+    task.save()
+      .catch IO.error
+      .then (task) ->
+       IO.println("Add Task: ##{task.getDataValue('id')}")
+       process.exit()
+
 
 module.exports = Add

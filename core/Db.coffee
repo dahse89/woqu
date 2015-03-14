@@ -1,46 +1,46 @@
-Sqlz = require('sequelize')
-
-class Db
+module.exports = class Db
   constructor: (@master) ->
-    @update = true
-    @debugOutput = false
-    @models = {}
-    @orm = new Sqlz 'Test', '', '',
-      host: 'localhost',
-      dialect: 'sqlite',
-      storage: './tasks.db',
-      logging: @debugOutput
+    @debugOutput = false;
+    @update = true;
+    @models = ['Task'];
+    @modelsDir = __dirname + '/model/sequelizeModels/'
+    @Sequelize = require('sequelize')
+    @instances = {}
+    @connect()
+  connect: ->
+    @sequelize = new @Sequelize 'Test', '', '',
+        host: 'localhost',
+        dialect: 'sqlite',
+        storage: './tasks.db',
+        logging: if @debugOutput then console.log else no
+    @loadModels()
+  loadModels: ->
+    for k,model of @models
+      @instances[model] = @sequelize.import @modelsDir + model
+    @initRelationships()
+  initRelationships: ->
+    ((models)->
+      # models.Task.belongsTo(models.User)
+      # models.PhoneNumber.belongsTo(models.User)
+      # models.User.hasMany(models.Task)
+      # models.User.hasMany(models.PhoneNumber)
+    )(@instances)
+
+  updateDbSchema: (mode) ->
+    @update = mode
+    @sync()
+
+  sync: ->
+    mode = @update
+    @sequelize.sync force: mode
+      .catch (error) -> console.log error
+      .then ->
+          console.log "#{if mode then 'hard' else 'soft'} update done"
+          process.exit()
 
 
-  getModels: -> @models
-  getOrm: -> @orm
-
-  init: (ready) ->
-    # schemas
-    taskSchema =
-      id: type: Sqlz.INTEGER, autoIncrement: true, primaryKey: true
-      description: type: Sqlz.TEXT
-      postponed: type: Sqlz.INTEGER
-      done_at: type: Sqlz.DATE
-
-    loggedWorkSchema =
-      id: type: Sqlz.INTEGER, autoIncrement: true, primaryKey: true
-      text: type: Sqlz.TEXT
+  getModels: -> @instances
+  getModel: (name) -> @instances[name]
 
 
-    # models
-    @models.Task = @orm.define 'task', taskSchema
-    @models.LoggedWork = @orm.define 'logged_work', loggedWorkSchema
-
-    # relations
-    @models.Task.hasMany(@models.LoggedWork)
-
-
-    [models,orm] = [@models,@orm]
-    # todo Check why LoggedWord can not be synced
-    @models.LoggedWork.sync(force: @update).then () ->
-      @models.Task.sync(force: @update).then () ->
-        ready(orm,models)
-
-module.exports = Db
 
