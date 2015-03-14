@@ -9,7 +9,6 @@
     }
 
     Next.prototype.init = function() {
-      this.db = this.master.getDb();
       return this.moveCurTaskBackwards();
     };
 
@@ -20,7 +19,7 @@
 
     Next.prototype.moveCurTaskBackwards = function() {
       var todo;
-      todo = this.master.factory('todo');
+      todo = this.master.factory('cmd/todo');
       return todo.getCurrentTask(function(task) {
         var postponed;
         postponed = task.getDataValue("postponed");

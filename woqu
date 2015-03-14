@@ -1,3 +1,8 @@
 #!/usr/bin/env node
 var devMode = true;
-require('./core/WoQu.js').run(devMode);
+var WoQu = require('./core/WoQu');
+var app = new WoQu(devMode);
+/**
+ * WoQu description
+ */
+app.run();

@@ -5,7 +5,7 @@ module.exports = class CmdsFactory
   @instances = {}
   @master = null
 
-  @setMaster: (@master) ->
+  @setMaster: (@master) -> @
 
   @get: (name, args = []) ->
     name = @toCoreModelName(name)

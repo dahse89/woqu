@@ -16,11 +16,11 @@
     Admin.prototype.init = function() {
       var db;
       if (this.args[0] === 'dbUpdate') {
-        db = this.master.getDb();
+        db = this.master.factory('db');
         db.updateDbSchema(true);
       }
       if (this.args[0] === 'dbInstall') {
-        db = this.master.getDb();
+        db = this.master.factory('db');
         return db.updateDbSchema(false);
       }
     };

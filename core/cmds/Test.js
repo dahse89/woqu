@@ -16,7 +16,7 @@
     Test.prototype.init = function() {
       var task;
       console.log("do tests here");
-      task = this.master.getDb().getModel('Task').build();
+      task = this.master.factory('db').getModel('Task').build();
       task.description = "mal wieder ein test";
       task.postponed = 0;
       task.test = "will this new field be added";

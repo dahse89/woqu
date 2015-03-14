@@ -1,7 +1,6 @@
 module.exports = class Done
 
   constructor: (@master, @args) ->
-    [@IO,@db] = @master.coreModels "IO", "db"
 
   init: -> @setDone()
 
@@ -9,8 +8,8 @@ module.exports = class Done
   * set current Task to done and print it
   ###
   setDone: () ->
-    IO = @IO
-    todo = @master.factory('todo')
+    IO = @master.factory("IO")
+    todo = @master.woqu('todo')
     todo.getCurrentTask (task)->
 
         attr = done_at: new Date()

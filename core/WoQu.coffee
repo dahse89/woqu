@@ -1,89 +1,45 @@
-#todo use class structur here
-WoQu = do ->
-  # privates
-  Db = require('./Db.js')
-  db   = null
-  fs   = require 'fs'
-  clicolor = require 'cli-color'
-  _IO = require './IO.js'
-  IO = null
-  CmdsFactory = require './CmdsFactory.js'
+module.exports = class WoQu
 
-  args = null
-  devMode = true
+  constructor: (@devMode) ->
+    CmdsFactory = require('./CmdsFactory.js')
+    @args = process.argv.slice(2)
+    @coreModels =
+      fs: require 'fs'
+      cliColor: require 'cli-color'
+      db: null
+      IO: null
 
-  #public
-  ###*
-  * start woqu app and handle args
-  ###
-  run: (_devMode) ->
-    db = new Db(WoQu)
-    IO = new _IO(WoQu)
-    #db.init () -> WoQu.ready _devMode
-    WoQu.ready _devMode
+      cmdsFactory: CmdsFactory.setMaster(@)
 
-  ready: (_devMode) ->
-    devMode = _devMode
-    args = WoQu.getArgs()
-    @factory(args[0],args.slice(1)).init()
+  woqu: (name, args)->
+    @factory('cmdsFactory').get(name,args)
 
-
-  factory: (name, args)->
-    CmdsFactory.setMaster(WoQu)
-    CmdsFactory.get(name,args)
-
-  ###*
-  * get relevant args
-  * @return array
-  ###
-  getArgs: -> process.argv.slice(2)
-
-  ###*
-  * get database model reference
-  * @return Db_ref
-  ###
-  getDb: -> db
-  ###*
-  * get IO model reference
-  * @return IO_ref
-  ###
-  getIO: -> IO
-
-  ###*
-  * get Task class
-  * @return Task
-  ###
-  getTask: -> Task
-
-  ###*
-  * get LoggedWord class
-  * @return LoggedWord
-  ###
-  getLoggedWord: -> LoggedWord
-
-  ###*
-  * check if app is in development mode
-  * @return boolean
-  ###
-  isDevMode: -> devMode
-
-  ###*
-  * cli color handle getter
-  * @return cli-color_ref
-  ###
-  getCliColor: -> clicolor
-
-  ###*
-  # inline Model Getter
-  ###
-  coreModels: (names...)->
+  factory: (names...) ->
     models = []
-    for i,name of names
-      models.push(db) if (name is 'db')
-      models.push(IO) if (name is 'IO')
-      models.push(fs) if (name is 'fs')
-      models.push(clicolor) if (name is 'clicolor')
-    models
+    if names.length > 0
+      for k,v of names
+        path = v.split '/'
+        if path.length is 2
+          switch path[0]
+            when 'model' then models.push(@factory('db').getModel(path[1]))
+            when 'cmd' then models.push(@woqu(path[1],path.slice(2)))
+        else
+          models.push(@coreModels[path[0]])
+
+    if models.length is 1
+      return models[0]
+
+    return models
+
+  run: ->
+    Db = require('./Db');
+    IO = require('./IO');
+    @coreModels.db = new Db(@)
+    @coreModels.IO = new IO(@)
+    @ready()
+
+  ready: () ->
+    @woqu(@args[0],@args.slice(1)).init()
 
 
-module.exports = WoQu
+

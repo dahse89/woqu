@@ -4,10 +4,8 @@
 
   module.exports = Todo = (function() {
     function Todo(master, args) {
-      var ref;
       this.master = master;
       this.args = args;
-      ref = this.master.coreModels("db", "IO"), this.db = ref[0], this.IO = ref[1];
     }
 
     Todo.prototype.init = function() {
@@ -15,7 +13,7 @@
     };
 
     Todo.prototype.getCurrentTask = function(cb) {
-      return this.db.getModel('Task').find({
+      return this.master.factory('model/Task').find({
         where: ["done_at is null"],
         order: 'id + postponed, postponed, id ASC',
         limit: 1
@@ -29,7 +27,7 @@
 
     Todo.prototype.getTodo = function() {
       var IO;
-      IO = this.IO;
+      IO = this.master.factory('IO');
       return this.getCurrentTask(function(task) {
         IO.printTask(task);
         return process.exit();
@@ -39,7 +37,5 @@
     return Todo;
 
   })();
-
-  module.exports = Todo;
 
 }).call(this);

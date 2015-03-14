@@ -7,7 +7,7 @@
       var ref;
       this.master = master;
       this.args = args;
-      ref = this.master.coreModels("IO", "db"), this.IO = ref[0], this.db = ref[1];
+      ref = this.master.factory("IO", "db"), this.IO = ref[0], this.db = ref[1];
     }
 
     Log.prototype.init = function() {

@@ -7,11 +7,11 @@ module.exports = class Admin
   ###
   init: () ->
     if @args[0] is 'dbUpdate'
-      db = @master.getDb();
+      db = @master.factory('db');
       db.updateDbSchema(true)
 
     if @args[0] is 'dbInstall'
-      db = @master.getDb();
+      db = @master.factory('db');
       db.updateDbSchema(false)
 
 

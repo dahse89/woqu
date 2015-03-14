@@ -3,120 +3,67 @@
   var WoQu,
     slice = [].slice;
 
-  WoQu = (function() {
-    var CmdsFactory, Db, IO, _IO, args, clicolor, db, devMode, fs;
-    Db = require('./Db.js');
-    db = null;
-    fs = require('fs');
-    clicolor = require('cli-color');
-    _IO = require('./IO.js');
-    IO = null;
-    CmdsFactory = require('./CmdsFactory.js');
-    args = null;
-    devMode = true;
-    return {
+  module.exports = WoQu = (function() {
+    function WoQu(devMode) {
+      var CmdsFactory;
+      this.devMode = devMode;
+      CmdsFactory = require('./CmdsFactory.js');
+      this.args = process.argv.slice(2);
+      this.coreModels = {
+        fs: require('fs'),
+        cliColor: require('cli-color'),
+        db: null,
+        IO: null,
+        cmdsFactory: CmdsFactory.setMaster(this)
+      };
+    }
 
-      /**
-      * start woqu app and handle args
-       */
-      run: function(_devMode) {
-        db = new Db(WoQu);
-        IO = new _IO(WoQu);
-        return WoQu.ready(_devMode);
-      },
-      ready: function(_devMode) {
-        devMode = _devMode;
-        args = WoQu.getArgs();
-        return this.factory(args[0], args.slice(1)).init();
-      },
-      factory: function(name, args) {
-        CmdsFactory.setMaster(WoQu);
-        return CmdsFactory.get(name, args);
-      },
+    WoQu.prototype.woqu = function(name, args) {
+      return this.factory('cmdsFactory').get(name, args);
+    };
 
-      /**
-      * get relevant args
-      * @return array
-       */
-      getArgs: function() {
-        return process.argv.slice(2);
-      },
-
-      /**
-      * get database model reference
-      * @return Db_ref
-       */
-      getDb: function() {
-        return db;
-      },
-
-      /**
-      * get IO model reference
-      * @return IO_ref
-       */
-      getIO: function() {
-        return IO;
-      },
-
-      /**
-      * get Task class
-      * @return Task
-       */
-      getTask: function() {
-        return Task;
-      },
-
-      /**
-      * get LoggedWord class
-      * @return LoggedWord
-       */
-      getLoggedWord: function() {
-        return LoggedWord;
-      },
-
-      /**
-      * check if app is in development mode
-      * @return boolean
-       */
-      isDevMode: function() {
-        return devMode;
-      },
-
-      /**
-      * cli color handle getter
-      * @return cli-color_ref
-       */
-      getCliColor: function() {
-        return clicolor;
-      },
-
-      /**
-       * inline Model Getter
-       */
-      coreModels: function() {
-        var i, models, name, names;
-        names = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-        models = [];
-        for (i in names) {
-          name = names[i];
-          if (name === 'db') {
-            models.push(db);
-          }
-          if (name === 'IO') {
-            models.push(IO);
-          }
-          if (name === 'fs') {
-            models.push(fs);
-          }
-          if (name === 'clicolor') {
-            models.push(clicolor);
+    WoQu.prototype.factory = function() {
+      var k, models, names, path, v;
+      names = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+      models = [];
+      if (names.length > 0) {
+        for (k in names) {
+          v = names[k];
+          path = v.split('/');
+          if (path.length === 2) {
+            switch (path[0]) {
+              case 'model':
+                models.push(this.factory('db').getModel(path[1]));
+                break;
+              case 'cmd':
+                models.push(this.woqu(path[1], path.slice(2)));
+            }
+          } else {
+            models.push(this.coreModels[path[0]]);
           }
         }
-        return models;
       }
+      if (models.length === 1) {
+        return models[0];
+      }
+      return models;
     };
-  })();
 
-  module.exports = WoQu;
+    WoQu.prototype.run = function() {
+      var Db, IO;
+      Db = require('./Db');
+      IO = require('./IO');
+      this.coreModels.db = new Db(this);
+      this.coreModels.IO = new IO(this);
+      return this.ready();
+    };
+
+    WoQu.prototype.ready = function() {
+      return this.woqu(this.args[0], this.args.slice(1)).init();
+    };
+
+    return WoQu;
+
+  })();
 
 }).call(this);

@@ -4,15 +4,15 @@
 
   module.exports = Add = (function() {
     function Add(master, args) {
-      var ref;
       this.master = master;
       this.args = args;
-      ref = this.master.coreModels("db", "IO"), this.db = ref[0], this.IO = ref[1];
     }
 
     Add.prototype.init = function() {
+      var IO;
+      IO = this.master.factory('IO');
       if (this.args.length === 0) {
-        this.IO.readLine("Description: ", function(answer, IO) {
+        IO.readLine("Description: ", function(answer, IO) {
           return IO.println("Thank you for your valuable feedback:" + answer);
         });
         return;
@@ -28,9 +28,9 @@
      */
 
     Add.prototype.addTask = function(description) {
-      var IO, task;
-      IO = this.IO;
-      task = this.db.getModel('Task').build({
+      var IO, Task, ref, task;
+      ref = this.master.factory('IO', 'model/Task'), IO = ref[0], Task = ref[1];
+      task = Task.build({
         description: description,
         poststponed: 0
       });

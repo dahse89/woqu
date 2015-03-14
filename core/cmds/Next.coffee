@@ -3,14 +3,13 @@ module.exports = class Next
   constructor: (@master, @args) ->
 
   init: ->
-    @db = @master.getDb()
     @moveCurTaskBackwards()
 
   ###*
   * update Task to increase postponed
   ###
   moveCurTaskBackwards: () ->
-    todo = @master.factory('todo')
+    todo = @master.factory('cmd/todo')
 
     todo.getCurrentTask (task) ->
       postponed = task.getDataValue("postponed")

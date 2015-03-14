@@ -1,7 +1,7 @@
 module.exports = class Log
 
   constructor: (@master, @args) ->
-    [@IO,@db] = @master.coreModels "IO", "db"
+    [@IO,@db] = @master.factory "IO", "db"
 
   init: -> @logInfo()
 

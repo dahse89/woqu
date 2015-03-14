@@ -1,11 +1,12 @@
 module.exports = class Add
 
   constructor: (@master, @args) ->
-    [@db,@IO] = @master.coreModels("db","IO")
+
 
   init: ->
+    IO = @master.factory('IO')
     if @args.length is 0
-      @IO.readLine "Description: ", (answer, IO) ->
+      IO.readLine "Description: ", (answer, IO) ->
         # todo save to db
         IO.println "Thank you for your valuable feedback:#{answer}"
       return;
@@ -16,8 +17,8 @@ module.exports = class Add
   * add a Task to database
   ###
   addTask: (description) ->
-    IO = @IO
-    task = @db.getModel('Task').build(
+    [IO,Task] = @master.factory('IO','model/Task')
+    task = Task.build(
       description: description,
       poststponed: 0
     )

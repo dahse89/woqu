@@ -17,6 +17,7 @@
 
     CmdsFactory.setMaster = function(master) {
       this.master = master;
+      return this;
     };
 
     CmdsFactory.get = function(name, args) {

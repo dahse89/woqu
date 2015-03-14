@@ -4,10 +4,8 @@
 
   module.exports = Done = (function() {
     function Done(master, args) {
-      var ref;
       this.master = master;
       this.args = args;
-      ref = this.master.coreModels("IO", "db"), this.IO = ref[0], this.db = ref[1];
     }
 
     Done.prototype.init = function() {
@@ -21,8 +19,8 @@
 
     Done.prototype.setDone = function() {
       var IO, todo;
-      IO = this.IO;
-      todo = this.master.factory('todo');
+      IO = this.master.factory("IO");
+      todo = this.master.woqu('todo');
       return todo.getCurrentTask(function(task) {
         var attr, where;
         attr = {
