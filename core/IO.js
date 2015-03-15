@@ -72,10 +72,10 @@
       if (format == null) {
         format = 'DD.MM.YYYY HH:mm:ss';
       }
-      return this.moment(date).format(format);
+      return this.moment(date).calendar();
     };
 
-    IO.prototype.printTaskWithWork = function(task, works) {};
+    IO.prototype.gotLoggedWork = function(work) {};
 
 
     /**
@@ -84,23 +84,24 @@
      */
 
     IO.prototype.printTask = function(task, cb) {
-      var $_, _$, __moment, create_date_label, done_at_label, id, ref, task_lable, workLog;
+      var $_, _$, create_date_label, done_at_label, id, ref, task_lable, workLog;
       create_date_label = this.__date(task.createdAt);
       task_lable = this.clc.white('Task: #');
       ref = [this.clc.red('['), this.clc.red(']')], _$ = ref[0], $_ = ref[1];
       id = this.clc.blue(task.id);
       done_at_label = task.done_at ? (_$ + "done" + $_ + ": ") + this.__date(task.done_at) : ' ';
       workLog = '';
-      __moment = this.moment;
-      return task.getLoggedWorks().then(function(work) {
-        var i, len, w;
-        for (i = 0, len = work.length; i < len; i++) {
-          w = work[i];
-          workLog += "   " + (__moment(w.createdAt).format("DD.MM.YYYY HH:mm:ss")) + ": " + w.text + "\n";
-        }
-        console.log("" + task_lable + id + " From: " + create_date_label + "\n" + task.description + "\n" + _$ + "postponed" + $_ + ": " + task.postponed + "\n" + done_at_label + "\n" + workLog);
-        return cb();
-      });
+      return task.getLoggedWorks().then((function(_this) {
+        return function(work) {
+          var i, len, w;
+          for (i = 0, len = work.length; i < len; i++) {
+            w = work[i];
+            workLog += "   " + (_this.__date(w.createdAt)) + ": " + w.text + "\n";
+          }
+          console.log("" + task_lable + id + " added: " + create_date_label + "\n" + task.description + "\n" + _$ + "postponed" + $_ + ": " + task.postponed + "\n" + done_at_label + "\n" + workLog);
+          return cb();
+        };
+      })(this));
     };
 
     return IO;

@@ -10,6 +10,7 @@ class IO
       input: process.stdin,
       output: process.stdout
 
+
   printTaskOrmModel: (model) ->
     Task = @master.getTask()
     task = new Task(model)
@@ -46,11 +47,10 @@ class IO
       self.rl.close()
 
   __date: (date, format = 'DD.MM.YYYY HH:mm:ss') ->
-     @moment(date).format format
+     @moment(date).calendar()
 
 
-
-  printTaskWithWork: (task,works) ->
+  gotLoggedWork: (work) ->
 
 
   ###*
@@ -65,11 +65,10 @@ class IO
     id = @clc.blue(task.id)
     done_at_label = if task.done_at then "#{_$}done#{$_}: " + @__date(task.done_at) else ' '
     workLog = ''
-    __moment = @moment
-    task.getLoggedWorks().then (work) ->
-      workLog += "   #{__moment(w.createdAt).format("DD.MM.YYYY HH:mm:ss")}: #{w.text}\n" for w in work
+    task.getLoggedWorks().then (work) =>
+      workLog += "   #{@__date(w.createdAt)}: #{w.text}\n" for w in work
       console.log """
-              #{task_lable}#{id} From: #{create_date_label}
+              #{task_lable}#{id} added: #{create_date_label}
               #{task.description}
               #{_$}postponed#{$_}: #{task.postponed}
               #{done_at_label}
