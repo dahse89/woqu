@@ -11,12 +11,16 @@ module.exports = class Log
     [todo,LoggedWork,IO] = @master.factory('cmd/todo','model/LoggedWork','IO')
     text = @args[0]
     todo.getCurrentTask (task) ->
-      work = LoggedWork.build text: text
-      work.save()
-        .catch IO.error
-        .then ->
-          task.addLoggedWork(work).then ->
-            todo.init()
+      if task is null
+        IO.println "Currently there is no task open"
+        process.exit()
+      else
+        work = LoggedWork.build text: text
+        work.save()
+          .catch IO.error
+          .then ->
+            task.addLoggedWork(work).then ->
+              todo.init()
 
 
 

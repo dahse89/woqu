@@ -19,6 +19,10 @@ module.exports = class Todo
 
     IO = @master.factory('IO')
     @getCurrentTask (task) ->
-      IO.printTask(task)
-      #process.exit()
+      if task is null
+        IO.println("Nothing todo so far!");
+        process.exit();
+      else
+        IO.printTask task, ->
+          process.exit()
 

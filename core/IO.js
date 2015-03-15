@@ -75,7 +75,7 @@
      * @return string
      */
 
-    IO.prototype.printTask = function(task) {
+    IO.prototype.printTask = function(task, cb) {
       var $_, _$, __moment, create_date_label, done_at_label, id, ref, task_lable, workLog;
       create_date_label = this.__date(task.createdAt);
       task_lable = this.clc.white('Task: #');
@@ -90,7 +90,8 @@
           w = work[i];
           workLog += "   " + (__moment(w.createdAt).format("DD.MM.YYYY HH:mm:ss")) + ": " + w.text + "\n";
         }
-        return console.log("" + task_lable + id + " From: " + create_date_label + "\n" + task.description + "\n" + _$ + "postponed" + $_ + ": " + task.postponed + "\n" + done_at_label + "\n" + workLog);
+        console.log("" + task_lable + id + " From: " + create_date_label + "\n" + task.description + "\n" + _$ + "postponed" + $_ + ": " + task.postponed + "\n" + done_at_label + "\n" + workLog);
+        return cb();
       });
     };
 

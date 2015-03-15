@@ -23,20 +23,26 @@
       todo = this.master.woqu('todo');
       return todo.getCurrentTask(function(task) {
         var attr, where;
-        attr = {
-          done_at: new Date()
-        };
-        where = {
-          where: {
-            id: task.id
-          }
-        };
-        return task.update(attr, where).then(function() {
-          IO.printTask(task);
-          return todo.init();
-        })["catch"](function(err) {
-          return console.log(err);
-        });
+        if (task === null) {
+          IO.println("Currently there is not task open!");
+          return process.exit();
+        } else {
+          attr = {
+            done_at: new Date()
+          };
+          where = {
+            where: {
+              id: task.id
+            }
+          };
+          return task.update(attr, where).then(function() {
+            return IO.printTask(task, function() {
+              return todo.init();
+            });
+          })["catch"](function(err) {
+            return console.log(err);
+          });
+        }
       });
     };
 

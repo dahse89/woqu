@@ -9,10 +9,14 @@ module.exports = class Next
   * update Task to increase postponed
   ###
   moveCurTaskBackwards: () ->
-    todo = @master.factory('cmd/todo')
+    [todo,IO] = @master.factory('cmd/todo','IO')
 
     todo.getCurrentTask (task) ->
-      task.increment('postponed').then () ->
-        todo.init()
+      if task is null
+        IO.println "Currently there is no task open"
+        process.exit()
+      else
+        task.increment('postponed').then () ->
+          todo.init()
 
 module.exports = Next

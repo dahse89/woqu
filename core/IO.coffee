@@ -50,7 +50,7 @@ class IO
    * convert an instance of task class to string
    * @return string
   ###
-  printTask: (task) ->
+  printTask: (task,cb) ->
 
     create_date_label = @__date(task.createdAt)
     task_lable = @clc.white('Task: #')
@@ -68,6 +68,7 @@ class IO
               #{done_at_label}
               #{workLog}
             """
+      cb()
 
 
 module.exports = IO

@@ -23,14 +23,19 @@
       text = this.args[0];
       return todo.getCurrentTask(function(task) {
         var work;
-        work = LoggedWork.build({
-          text: text
-        });
-        return work.save()["catch"](IO.error).then(function() {
-          return task.addLoggedWork(work).then(function() {
-            return todo.init();
+        if (task === null) {
+          IO.println("Currently there is no task open");
+          return process.exit();
+        } else {
+          work = LoggedWork.build({
+            text: text
           });
-        });
+          return work.save()["catch"](IO.error).then(function() {
+            return task.addLoggedWork(work).then(function() {
+              return todo.init();
+            });
+          });
+        }
       });
     };
 

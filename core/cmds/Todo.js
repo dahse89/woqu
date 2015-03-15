@@ -29,7 +29,14 @@
       var IO;
       IO = this.master.factory('IO');
       return this.getCurrentTask(function(task) {
-        return IO.printTask(task);
+        if (task === null) {
+          IO.println("Nothing todo so far!");
+          return process.exit();
+        } else {
+          return IO.printTask(task, function() {
+            return process.exit();
+          });
+        }
       });
     };
 
