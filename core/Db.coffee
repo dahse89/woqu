@@ -2,8 +2,6 @@ module.exports = class Db
   constructor: (@master) ->
     @debugOutput = true;
     @update = true;
-    # todo not needed if you would use all files in dir (readdir)
-    @models = ['Task','LoggedWork'];
     @modelsDir = __dirname + '/model/sequelizeModels/'
     @Sequelize = require('sequelize')
     @instances = {}
@@ -17,11 +15,17 @@ module.exports = class Db
         logging: if dbConfig.debug_output then console.log else no
     @loadModels()
   loadModels: ->
-    for k,model of @models
-      @instances[model] = @sequelize.import @modelsDir + model
+    fs = @master.factory('fs')
+    files = fs.readdirSync(__dirname + '/model/sequelizeModels')
+    for i,file of files
+      if /\.js$/.test(file)
+        model = file.replace(/\.js$/,'')
+        @instances[model] = @sequelize.import @modelsDir + model
     @initRelationships()
+
   initRelationships: ->
     @instances.Task.hasMany(@instances.LoggedWork)
+    @instances.Task.hasMany(@instances.Info)
 
   updateDbSchema: (mode) ->
     @update = mode

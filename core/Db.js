@@ -7,7 +7,6 @@
       this.master = master;
       this.debugOutput = true;
       this.update = true;
-      this.models = ['Task', 'LoggedWork'];
       this.modelsDir = __dirname + '/model/sequelizeModels/';
       this.Sequelize = require('sequelize');
       this.instances = {};
@@ -27,17 +26,22 @@
     };
 
     Db.prototype.loadModels = function() {
-      var k, model, ref;
-      ref = this.models;
-      for (k in ref) {
-        model = ref[k];
-        this.instances[model] = this.sequelize["import"](this.modelsDir + model);
+      var file, files, fs, i, model;
+      fs = this.master.factory('fs');
+      files = fs.readdirSync(__dirname + '/model/sequelizeModels');
+      for (i in files) {
+        file = files[i];
+        if (/\.js$/.test(file)) {
+          model = file.replace(/\.js$/, '');
+          this.instances[model] = this.sequelize["import"](this.modelsDir + model);
+        }
       }
       return this.initRelationships();
     };
 
     Db.prototype.initRelationships = function() {
-      return this.instances.Task.hasMany(this.instances.LoggedWork);
+      this.instances.Task.hasMany(this.instances.LoggedWork);
+      return this.instances.Task.hasMany(this.instances.Info);
     };
 
     Db.prototype.updateDbSchema = function(mode) {
