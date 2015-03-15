@@ -4,10 +4,8 @@
 
   module.exports = Log = (function() {
     function Log(master, args) {
-      var ref;
       this.master = master;
       this.args = args;
-      ref = this.master.factory("IO", "db"), this.IO = ref[0], this.db = ref[1];
     }
 
     Log.prototype.init = function() {
@@ -20,7 +18,20 @@
      */
 
     Log.prototype.logInfo = function() {
-      return this.IO.println("jf lösjfl ajsfjlöasj fl");
+      var IO, LoggedWork, ref, text, todo;
+      ref = this.master.factory('cmd/todo', 'model/LoggedWork', 'IO'), todo = ref[0], LoggedWork = ref[1], IO = ref[2];
+      text = this.args[0];
+      return todo.getCurrentTask(function(task) {
+        var work;
+        work = LoggedWork.build({
+          text: text
+        });
+        return work.save()["catch"](IO.error).then(function() {
+          return task.addLoggedWork(work).then(function() {
+            return todo.init();
+          });
+        });
+      });
     };
 
     return Log;

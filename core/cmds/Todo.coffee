@@ -20,5 +20,5 @@ module.exports = class Todo
     IO = @master.factory('IO')
     @getCurrentTask (task) ->
       IO.printTask(task)
-      process.exit()
+      #process.exit()
 

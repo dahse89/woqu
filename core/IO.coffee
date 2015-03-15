@@ -43,6 +43,9 @@ class IO
 
 
 
+  printTaskWithWork: (task,works) ->
+
+
   ###*
    * convert an instance of task class to string
    * @return string
@@ -54,13 +57,17 @@ class IO
     [_$,$_] = [@clc.red('['),@clc.red(']')]
     id = @clc.blue(task.id)
     done_at_label = if task.done_at then "#{_$}done#{$_}: " + @__date(task.done_at) else ' '
-    @println(
-      """
-        #{task_lable}#{id} From: #{create_date_label}
-        #{task.description}
-        #{_$}postponed#{$_}: #{task.postponed}
-        #{done_at_label}
-      """
-    )
+    workLog = ''
+    __moment = @moment
+    task.getLoggedWorks().then (work) ->
+      workLog += "   #{__moment(w.createdAt).format("DD.MM.YYYY HH:mm:ss")}: #{w.text}\n" for w in work
+      console.log """
+              #{task_lable}#{id} From: #{create_date_label}
+              #{task.description}
+              #{_$}postponed#{$_}: #{task.postponed}
+              #{done_at_label}
+              #{workLog}
+            """
+
 
 module.exports = IO

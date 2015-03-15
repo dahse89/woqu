@@ -1,7 +1,6 @@
 module.exports = class Log
 
   constructor: (@master, @args) ->
-    [@IO,@db] = @master.factory "IO", "db"
 
   init: -> @logInfo()
 
@@ -9,8 +8,17 @@ module.exports = class Log
   * set current Task to done and print it
   ###
   logInfo: () ->
+    [todo,LoggedWork,IO] = @master.factory('cmd/todo','model/LoggedWork','IO')
+    text = @args[0]
+    todo.getCurrentTask (task) ->
+      work = LoggedWork.build text: text
+      work.save()
+        .catch IO.error
+        .then ->
+          task.addLoggedWork(work).then ->
+            todo.init()
 
-    @IO.println("jf lösjfl ajsfjlöasj fl")
+
 
 
 module.exports = Log

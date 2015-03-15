@@ -67,6 +67,8 @@
       return this.moment(date).format(format);
     };
 
+    IO.prototype.printTaskWithWork = function(task, works) {};
+
 
     /**
      * convert an instance of task class to string
@@ -74,13 +76,22 @@
      */
 
     IO.prototype.printTask = function(task) {
-      var $_, _$, create_date_label, done_at_label, id, ref, task_lable;
+      var $_, _$, __moment, create_date_label, done_at_label, id, ref, task_lable, workLog;
       create_date_label = this.__date(task.createdAt);
       task_lable = this.clc.white('Task: #');
       ref = [this.clc.red('['), this.clc.red(']')], _$ = ref[0], $_ = ref[1];
       id = this.clc.blue(task.id);
       done_at_label = task.done_at ? (_$ + "done" + $_ + ": ") + this.__date(task.done_at) : ' ';
-      return this.println("" + task_lable + id + " From: " + create_date_label + "\n" + task.description + "\n" + _$ + "postponed" + $_ + ": " + task.postponed + "\n" + done_at_label);
+      workLog = '';
+      __moment = this.moment;
+      return task.getLoggedWorks().then(function(work) {
+        var i, len, w;
+        for (i = 0, len = work.length; i < len; i++) {
+          w = work[i];
+          workLog += "   " + (__moment(w.createdAt).format("DD.MM.YYYY HH:mm:ss")) + ": " + w.text + "\n";
+        }
+        return console.log("" + task_lable + id + " From: " + create_date_label + "\n" + task.description + "\n" + _$ + "postponed" + $_ + ": " + task.postponed + "\n" + done_at_label + "\n" + workLog);
+      });
     };
 
     return IO;

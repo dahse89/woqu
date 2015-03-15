@@ -29,8 +29,7 @@
       var IO;
       IO = this.master.factory('IO');
       return this.getCurrentTask(function(task) {
-        IO.printTask(task);
-        return process.exit();
+        return IO.printTask(task);
       });
     };
 
