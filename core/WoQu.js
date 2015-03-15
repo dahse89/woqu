@@ -14,6 +14,7 @@
         cliColor: require('cli-color'),
         db: null,
         IO: null,
+        config: null,
         cmdsFactory: CmdsFactory.setMaster(this)
       };
     }
@@ -30,13 +31,16 @@
         for (k in names) {
           v = names[k];
           path = v.split('/');
-          if (path.length === 2) {
+          if (path.length > 1) {
             switch (path[0]) {
               case 'model':
                 models.push(this.factory('db').getModel(path[1]));
                 break;
               case 'cmd':
                 models.push(this.woqu(path[1], path.slice(2)));
+                break;
+              case 'config':
+                models.push(this.factory('config').get(path[1]));
             }
           } else {
             models.push(this.coreModels[path[0]]);
@@ -53,6 +57,7 @@
       var Db, IO;
       Db = require('./Db');
       IO = require('./IO');
+      this.coreModels.config = require('config');
       this.coreModels.db = new Db(this);
       this.coreModels.IO = new IO(this);
       return this.ready();

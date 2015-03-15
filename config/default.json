@@ -1,0 +1,14 @@
+{
+  "database": {
+    "host": "localhost",
+    "dialect": "sqlite",
+    "storage": "./tasks.db",
+    "debug_output": true
+  },
+  "messages": {
+    "nothingTodo": "Nothing todo so far!",
+    "noTaskOpen": "Currently there is no task open!",
+    "addTask": "Add Task: #",
+    "description": "Description"
+  }
+}

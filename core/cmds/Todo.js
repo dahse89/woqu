@@ -26,11 +26,11 @@
      */
 
     Todo.prototype.getTodo = function() {
-      var IO;
-      IO = this.master.factory('IO');
+      var IO, msg, ref;
+      ref = this.master.factory('IO', 'config/messages.nothingTodo'), IO = ref[0], msg = ref[1];
       return this.getCurrentTask(function(task) {
         if (task === null) {
-          IO.println("Nothing todo so far!");
+          IO.println(msg);
           return process.exit();
         } else {
           return IO.printTask(task, function() {

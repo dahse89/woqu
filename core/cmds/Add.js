@@ -9,11 +9,11 @@
     }
 
     Add.prototype.init = function() {
-      var IO;
-      IO = this.master.factory('IO');
+      var IO, addTaskMsg, descMsg, ref;
+      ref = this.master.factory('IO', 'config/messages.description', 'config/messages.addTask'), IO = ref[0], descMsg = ref[1], addTaskMsg = ref[2];
       if (this.args.length === 0) {
-        IO.readLine("Description: ", function(answer, IO) {
-          return IO.println("Thank you for your valuable feedback:" + answer);
+        IO.readLine(descMsg + ": ", function(answer, IO) {
+          return IO.println(addTaskMsg + answer);
         });
         return;
       }
@@ -28,14 +28,14 @@
      */
 
     Add.prototype.addTask = function(description) {
-      var IO, Task, ref, task;
-      ref = this.master.factory('IO', 'model/Task'), IO = ref[0], Task = ref[1];
+      var IO, Task, addTaskMsg, ref, task;
+      ref = this.master.factory('IO', 'model/Task', 'config/messages.addTask'), IO = ref[0], Task = ref[1], addTaskMsg = ref[2];
       task = Task.build({
         description: description,
         poststponed: 0
       });
       return task.save()["catch"](IO.error).then(function(task) {
-        IO.println("Add Task: #" + task.id);
+        IO.println(addTaskMsg + task.id);
         return process.exit();
       });
     };

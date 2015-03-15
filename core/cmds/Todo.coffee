@@ -17,10 +17,10 @@ module.exports = class Todo
   ###
   getTodo: () ->
 
-    IO = @master.factory('IO')
+    [IO, msg] = @master.factory('IO','config/messages.nothingTodo')
     @getCurrentTask (task) ->
       if task is null
-        IO.println("Nothing todo so far!");
+        IO.println(msg);
         process.exit();
       else
         IO.printTask task, ->

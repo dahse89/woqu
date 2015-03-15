@@ -27,6 +27,8 @@
     "sequelize": "^2.0.4",
     "sqlite3": "~3.0.5",
     "underscore": "^1.8.2",
-    "underscore.string": "^3.0.3"
+    "underscore.string": "^3.0.3",
+    "node-config": "0.0.2",
+    "config": "~1.12.0"
   }
 }

@@ -2,13 +2,15 @@ module.exports = class Add
 
   constructor: (@master, @args) ->
 
-
   init: ->
-    IO = @master.factory('IO')
+    [IO,descMsg,addTaskMsg] = @master.factory(
+      'IO','config/messages.description'
+      'config/messages.addTask'
+    )
     if @args.length is 0
-      IO.readLine "Description: ", (answer, IO) ->
+      IO.readLine descMsg + ": ", (answer, IO) ->
         # todo save to db
-        IO.println "Thank you for your valuable feedback:#{answer}"
+        IO.println addTaskMsg + answer
       return;
     if @args.length is 1
       @addTask(@args[0])
@@ -17,7 +19,9 @@ module.exports = class Add
   * add a Task to database
   ###
   addTask: (description) ->
-    [IO,Task] = @master.factory('IO','model/Task')
+    [IO,Task,addTaskMsg] = @master.factory(
+      'IO','model/Task', 'config/messages.addTask'
+    )
     task = Task.build(
       description: description,
       poststponed: 0
@@ -26,7 +30,7 @@ module.exports = class Add
     task.save()
       .catch IO.error
       .then (task) ->
-       IO.println("Add Task: ##{task.id}")
+       IO.println(addTaskMsg + task.id)
        process.exit()
 
 

@@ -15,11 +15,13 @@
     }
 
     Db.prototype.connect = function() {
-      this.sequelize = new this.Sequelize('Test', '', '', {
-        host: 'localhost',
-        dialect: 'sqlite',
-        storage: './tasks.db',
-        logging: this.debugOutput ? console.log : false
+      var dbConfig;
+      dbConfig = this.master.factory('config/database');
+      this.sequelize = new this.Sequelize('', '', '', {
+        host: dbConfig.host,
+        dialect: dbConfig.dialect,
+        storage: dbConfig.storage,
+        logging: dbConfig.debug_output ? console.log : false
       });
       return this.loadModels();
     };

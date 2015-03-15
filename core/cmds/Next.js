@@ -18,11 +18,11 @@
      */
 
     Next.prototype.moveCurTaskBackwards = function() {
-      var IO, ref, todo;
-      ref = this.master.factory('cmd/todo', 'IO'), todo = ref[0], IO = ref[1];
+      var IO, msg, ref, todo;
+      ref = this.master.factory('cmd/todo', 'IO', 'config/messages.noTaskOpen'), todo = ref[0], IO = ref[1], msg = ref[2];
       return todo.getCurrentTask(function(task) {
         if (task === null) {
-          IO.println("Currently there is no task open");
+          IO.println(msg);
           return process.exit();
         } else {
           return task.increment('postponed').then(function() {

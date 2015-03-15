@@ -9,11 +9,12 @@ module.exports = class Db
     @instances = {}
     @connect()
   connect: ->
-    @sequelize = new @Sequelize 'Test', '', '',
-        host: 'localhost',
-        dialect: 'sqlite',
-        storage: './tasks.db',
-        logging: if @debugOutput then console.log else no
+    dbConfig = @master.factory('config/database')
+    @sequelize = new @Sequelize '', '', '',
+        host: dbConfig.host,
+        dialect: dbConfig.dialect,
+        storage: dbConfig.storage,
+        logging: if dbConfig.debug_output then console.log else no
     @loadModels()
   loadModels: ->
     for k,model of @models

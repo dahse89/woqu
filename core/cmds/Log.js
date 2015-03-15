@@ -18,13 +18,13 @@
      */
 
     Log.prototype.logInfo = function() {
-      var IO, LoggedWork, ref, text, todo;
-      ref = this.master.factory('cmd/todo', 'model/LoggedWork', 'IO'), todo = ref[0], LoggedWork = ref[1], IO = ref[2];
+      var IO, LoggedWork, msg, ref, text, todo;
+      ref = this.master.factory('cmd/todo', 'model/LoggedWork', 'IO', 'config/messages.noTaskOpen'), todo = ref[0], LoggedWork = ref[1], IO = ref[2], msg = ref[3];
       text = this.args[0];
       return todo.getCurrentTask(function(task) {
         var work;
         if (task === null) {
-          IO.println("Currently there is no task open");
+          IO.println(msg);
           return process.exit();
         } else {
           work = LoggedWork.build({

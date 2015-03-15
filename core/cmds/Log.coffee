@@ -8,11 +8,14 @@ module.exports = class Log
   * set current Task to done and print it
   ###
   logInfo: () ->
-    [todo,LoggedWork,IO] = @master.factory('cmd/todo','model/LoggedWork','IO')
+    [todo,LoggedWork,IO,msg] = @master.factory(
+      'cmd/todo','model/LoggedWork','IO',
+      'config/messages.noTaskOpen'
+    )
     text = @args[0]
     todo.getCurrentTask (task) ->
       if task is null
-        IO.println "Currently there is no task open"
+        IO.println msg
         process.exit()
       else
         work = LoggedWork.build text: text

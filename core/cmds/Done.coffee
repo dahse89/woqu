@@ -8,11 +8,13 @@ module.exports = class Done
   * set current Task to done and print it
   ###
   setDone: () ->
-    IO = @master.factory("IO")
-    todo = @master.woqu('todo')
+    [IO,todo,msg] = @master.factory(
+      "IO", "cmd/todo", "config/messages.noTaskOpen"
+    )
+
     todo.getCurrentTask (task)->
         if task is null
-          IO.println("Currently there is not task open!");
+          IO.println msg
           process.exit()
         else
           attr = done_at: new Date()

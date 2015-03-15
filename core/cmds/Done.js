@@ -18,13 +18,12 @@
      */
 
     Done.prototype.setDone = function() {
-      var IO, todo;
-      IO = this.master.factory("IO");
-      todo = this.master.woqu('todo');
+      var IO, msg, ref, todo;
+      ref = this.master.factory("IO", "cmd/todo", "config/messages.noTaskOpen"), IO = ref[0], todo = ref[1], msg = ref[2];
       return todo.getCurrentTask(function(task) {
         var attr, where;
         if (task === null) {
-          IO.println("Currently there is not task open!");
+          IO.println(msg);
           return process.exit();
         } else {
           attr = {
