@@ -26,7 +26,7 @@ module.exports = class Add
     task.save()
       .catch IO.error
       .then (task) ->
-       IO.println("Add Task: ##{task.getDataValue('id')}")
+       IO.println("Add Task: ##{task.id}")
        process.exit()
 
 

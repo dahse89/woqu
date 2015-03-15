@@ -35,7 +35,7 @@
         poststponed: 0
       });
       return task.save()["catch"](IO.error).then(function(task) {
-        IO.println("Add Task: #" + (task.getDataValue('id')));
+        IO.println("Add Task: #" + task.id);
         return process.exit();
       });
     };

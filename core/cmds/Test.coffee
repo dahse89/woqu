@@ -7,25 +7,18 @@ module.exports = class Test
   ###
   init: () ->
     console.log("do tests here")
-
-    task = @master.factory('db').getModel('Task').build()
-    task.description = "mal wieder ein test"
-    task.postponed = 0
-    task.test = "will this new field be added"
-
-    task.save()
-        .catch (err) -> console.log(err)
-        .then (task) -> console.log("success " + task.getDataValue("id"))
+    [Task,LoggedWork,IO] = @master.factory 'model/Task', 'model/LoggedWork', 'IO'
 
     ###
-    task.description = "new sequelize test"
-    task.postponed = 0
-    task.done_at = null
-
-    task.save()
-      .catch (err) -> console.log(err)
-      .then (task) -> console.log("success " + task.getDataValue("id"))
+    Task.find( where: ['id = 1'], limit: 1).then (task) ->
+      work = LoggedWork.build text: "njklxnasjknxl asnx "
+      work.save().catch(IO.error).then ->
+        task.addLoggedWork(work).then -> console.log "done"
     ###
 
+    Task.find( where: ['id = 1'], limit: 1).then (task) ->
+      console.log task.id
+      task.getLoggedWorks().then (works) ->
+         works.forEach (work) -> console.log work.text
 
 

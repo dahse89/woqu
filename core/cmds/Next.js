@@ -21,11 +21,7 @@
       var todo;
       todo = this.master.factory('cmd/todo');
       return todo.getCurrentTask(function(task) {
-        var postponed;
-        postponed = task.getDataValue("postponed");
-        return task.updateAttributes({
-          postponed: postponed + 1
-        }).then(function() {
+        return task.increment('postponed').then(function() {
           return todo.init();
         });
       });

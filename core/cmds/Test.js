@@ -14,27 +14,27 @@
      */
 
     Test.prototype.init = function() {
-      var task;
+      var IO, LoggedWork, Task, ref;
       console.log("do tests here");
-      task = this.master.factory('db').getModel('Task').build();
-      task.description = "mal wieder ein test";
-      task.postponed = 0;
-      task.test = "will this new field be added";
-      return task.save()["catch"](function(err) {
-        return console.log(err);
-      }).then(function(task) {
-        return console.log("success " + task.getDataValue("id"));
-      });
+      ref = this.master.factory('model/Task', 'model/LoggedWork', 'IO'), Task = ref[0], LoggedWork = ref[1], IO = ref[2];
 
       /*
-      task.description = "new sequelize test"
-      task.postponed = 0
-      task.done_at = null
-      
-      task.save()
-        .catch (err) -> console.log(err)
-        .then (task) -> console.log("success " + task.getDataValue("id"))
+      Task.find( where: ['id = 1'], limit: 1).then (task) ->
+        work = LoggedWork.build text: "njklxnasjknxl asnx "
+        work.save().catch(IO.error).then ->
+          task.addLoggedWork(work).then -> console.log "done"
        */
+      return Task.find({
+        where: ['id = 1'],
+        limit: 1
+      }).then(function(task) {
+        console.log(task.id);
+        return task.getLoggedWorks().then(function(works) {
+          return works.forEach(function(work) {
+            return console.log(work.text);
+          });
+        });
+      });
     };
 
     return Test;

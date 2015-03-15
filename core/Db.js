@@ -5,9 +5,9 @@
   module.exports = Db = (function() {
     function Db(master) {
       this.master = master;
-      this.debugOutput = false;
+      this.debugOutput = true;
       this.update = true;
-      this.models = ['Task'];
+      this.models = ['Task', 'LoggedWork'];
       this.modelsDir = __dirname + '/model/sequelizeModels/';
       this.Sequelize = require('sequelize');
       this.instances = {};
@@ -35,7 +35,7 @@
     };
 
     Db.prototype.initRelationships = function() {
-      return (function(models) {})(this.instances);
+      return this.instances.Task.hasMany(this.instances.LoggedWork);
     };
 
     Db.prototype.updateDbSchema = function(mode) {
@@ -62,6 +62,10 @@
 
     Db.prototype.getModel = function(name) {
       return this.instances[name];
+    };
+
+    Db.prototype.getChainer = function() {
+      return new this.Sequelize.Utils.QueryChainer();
     };
 
     return Db;

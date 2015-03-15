@@ -28,7 +28,7 @@
         };
         where = {
           where: {
-            id: task.getDataValue("id")
+            id: task.id
           }
         };
         return task.update(attr, where).then(function() {

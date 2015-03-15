@@ -1,8 +1,9 @@
 module.exports = class Db
   constructor: (@master) ->
-    @debugOutput = false;
+    @debugOutput = true;
     @update = true;
-    @models = ['Task'];
+    # todo not needed if you would use all files in dir (readdir)
+    @models = ['Task','LoggedWork'];
     @modelsDir = __dirname + '/model/sequelizeModels/'
     @Sequelize = require('sequelize')
     @instances = {}
@@ -19,12 +20,7 @@ module.exports = class Db
       @instances[model] = @sequelize.import @modelsDir + model
     @initRelationships()
   initRelationships: ->
-    ((models)->
-      # models.Task.belongsTo(models.User)
-      # models.PhoneNumber.belongsTo(models.User)
-      # models.User.hasMany(models.Task)
-      # models.User.hasMany(models.PhoneNumber)
-    )(@instances)
+    @instances.Task.hasMany(@instances.LoggedWork)
 
   updateDbSchema: (mode) ->
     @update = mode
@@ -41,6 +37,7 @@ module.exports = class Db
 
   getModels: -> @instances
   getModel: (name) -> @instances[name]
+  getChainer: -> new @Sequelize.Utils.QueryChainer()
 
 
 

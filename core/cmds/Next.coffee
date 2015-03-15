@@ -12,7 +12,7 @@ module.exports = class Next
     todo = @master.factory('cmd/todo')
 
     todo.getCurrentTask (task) ->
-      postponed = task.getDataValue("postponed")
-      task.updateAttributes(postponed:postponed+1).then () -> todo.init()
+      task.increment('postponed').then () ->
+        todo.init()
 
 module.exports = Next

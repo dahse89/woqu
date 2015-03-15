@@ -74,18 +74,13 @@
      */
 
     IO.prototype.printTask = function(task) {
-      var $_, _$, createAtDate, create_date_label, description, done_at, done_at_label, id, idVal, postponed, ref, task_lable;
-      createAtDate = task.getDataValue("createdAt");
-      create_date_label = this.__date(createAtDate);
+      var $_, _$, create_date_label, done_at_label, id, ref, task_lable;
+      create_date_label = this.__date(task.createdAt);
       task_lable = this.clc.white('Task: #');
       ref = [this.clc.red('['), this.clc.red(']')], _$ = ref[0], $_ = ref[1];
-      idVal = task.getDataValue("id");
-      id = this.clc.blue(idVal);
-      done_at = task.getDataValue("done_at");
-      done_at_label = done_at ? (_$ + "done" + $_ + ": ") + this.__date(done_at) : ' ';
-      description = task.getDataValue("description");
-      postponed = task.getDataValue("postponed");
-      return this.println("" + task_lable + id + " From: " + create_date_label + "\n" + description + "\n" + _$ + "postponed" + $_ + ": " + postponed + "\n" + done_at_label);
+      id = this.clc.blue(task.id);
+      done_at_label = task.done_at ? (_$ + "done" + $_ + ": ") + this.__date(task.done_at) : ' ';
+      return this.println("" + task_lable + id + " From: " + create_date_label + "\n" + task.description + "\n" + _$ + "postponed" + $_ + ": " + task.postponed + "\n" + done_at_label);
     };
 
     return IO;

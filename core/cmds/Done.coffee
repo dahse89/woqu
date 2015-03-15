@@ -13,7 +13,7 @@ module.exports = class Done
     todo.getCurrentTask (task)->
 
         attr = done_at: new Date()
-        where = where: id: task.getDataValue("id")
+        where = where: id: task.id
 
         task.update(attr, where)
           .then () ->

@@ -48,21 +48,17 @@ class IO
    * @return string
   ###
   printTask: (task) ->
-    createAtDate = task.getDataValue("createdAt")
-    create_date_label = @__date(createAtDate)
+
+    create_date_label = @__date(task.createdAt)
     task_lable = @clc.white('Task: #')
     [_$,$_] = [@clc.red('['),@clc.red(']')]
-    idVal = task.getDataValue("id")
-    id = @clc.blue(idVal)
-    done_at = task.getDataValue("done_at")
-    done_at_label = if done_at then "#{_$}done#{$_}: " + @__date(done_at) else ' '
-    description = task.getDataValue("description")
-    postponed = task.getDataValue("postponed")
+    id = @clc.blue(task.id)
+    done_at_label = if task.done_at then "#{_$}done#{$_}: " + @__date(task.done_at) else ' '
     @println(
       """
         #{task_lable}#{id} From: #{create_date_label}
-        #{description}
-        #{_$}postponed#{$_}: #{postponed}
+        #{task.description}
+        #{_$}postponed#{$_}: #{task.postponed}
         #{done_at_label}
       """
     )
