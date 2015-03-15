@@ -7,7 +7,23 @@ module.exports = class Test
   ###
   init: () ->
     console.log("do tests here")
-    cfg = @master.factory('config')
-    console.log cfg.getImpl
+    [Task,LoggedWork,Info] = @master.factory(
+      'model/Task','model/LoggedWork',
+      'model/Info'
+    )
+    Task.findAll(
+      where: id: 1
+      include:[
+        Info
+        LoggedWork
+      ]
+    ).then (fulltask) ->
+      fulltask[0].Infos.forEach (info) ->
+        console.log info.text
+
+      fulltask[0].LoggedWorks.forEach (work) ->
+        console.log work.text
+
+
 
 

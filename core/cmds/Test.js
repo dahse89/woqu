@@ -14,10 +14,22 @@
      */
 
     Test.prototype.init = function() {
-      var cfg;
+      var Info, LoggedWork, Task, ref;
       console.log("do tests here");
-      cfg = this.master.factory('config');
-      return console.log(cfg.getImpl);
+      ref = this.master.factory('model/Task', 'model/LoggedWork', 'model/Info'), Task = ref[0], LoggedWork = ref[1], Info = ref[2];
+      return Task.findAll({
+        where: {
+          id: 1
+        },
+        include: [Info, LoggedWork]
+      }).then(function(fulltask) {
+        fulltask[0].Infos.forEach(function(info) {
+          return console.log(info.text);
+        });
+        return fulltask[0].LoggedWorks.forEach(function(work) {
+          return console.log(work.text);
+        });
+      });
     };
 
     return Test;

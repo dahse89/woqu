@@ -66,6 +66,7 @@ class IO
     done_at_label = if task.done_at then "#{_$}done#{$_}: " + @__date(task.done_at) else ' '
     workLog = ''
     task.getLoggedWorks().then (work) =>
+
       workLog += "   #{@__date(w.createdAt)}: #{w.text}\n" for w in work
       console.log """
               #{task_lable}#{id} added: #{create_date_label}
