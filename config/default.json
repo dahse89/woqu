@@ -1,14 +1,17 @@
 {
-  "database": {
-    "host": "localhost",
-    "dialect": "sqlite",
-    "storage": "./tasks.db",
-    "debug_output": true
-  },
-  "messages": {
-    "nothingTodo": "Nothing todo so far!",
-    "noTaskOpen": "Currently there is no task open!",
-    "addTask": "Add Task: #",
-    "description": "Description"
-  }
+    "database": {
+        "host": "localhost",
+        "dialect": "sqlite",
+        "storage": "./tasks.db",
+        "debug_output": false
+    },
+    "messages": {
+        "nothingTodo": "Nothing todo so far!",
+        "noTaskOpen": "Currently there is no task open!",
+        "addTask": "Add Task: #",
+        "description": "Description",
+        "configNotFround": "Config value not found",
+        "missingArgument": "missing Argument",
+        "specifyProperty": "Please specify exact property"
+    }
 }

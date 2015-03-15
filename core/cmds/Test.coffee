@@ -7,7 +7,7 @@ module.exports = class Test
   ###
   init: () ->
     console.log("do tests here")
-    host = @master.factory('config/database')
-    console.log(host)
+    cfg = @master.factory('config')
+    console.log cfg.getImpl
 
 

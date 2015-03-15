@@ -14,10 +14,10 @@
      */
 
     Test.prototype.init = function() {
-      var host;
+      var cfg;
       console.log("do tests here");
-      host = this.master.factory('config/database');
-      return console.log(host);
+      cfg = this.master.factory('config');
+      return console.log(cfg.getImpl);
     };
 
     return Test;

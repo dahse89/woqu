@@ -23,7 +23,15 @@
     };
 
     IO.prototype.error = function(msg) {
-      return this.println(msg);
+      this.println(msg);
+      return process.exit();
+    };
+
+    IO.prototype.getString = function(data) {
+      if (typeof data === 'object') {
+        return JSON.stringify(data, null, 4);
+      }
+      return data;
     };
 
 
@@ -33,7 +41,7 @@
      */
 
     IO.prototype.print = function(str) {
-      return this.term_ui.out(str);
+      return this.term_ui.out(this.getString(str));
     };
 
 
@@ -43,7 +51,7 @@
      */
 
     IO.prototype.println = function(str) {
-      return this.term_ui.out(str + "\n");
+      return this.print(this.getString(str) + "\n");
     };
 
 

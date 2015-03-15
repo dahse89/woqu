@@ -15,19 +15,26 @@ class IO
     task = new Task(model)
     @println(task.toString())
 
-  error: (msg) -> @println(msg)
+  error: (msg) ->
+    @println(msg)
+    process.exit()
+
+  getString: (data) ->
+    if(typeof data is 'object')
+      return JSON.stringify(data,null,4)
+    data
 
   ###*
   * print string in shell
   *###
   print: (str) ->
-    @term_ui.out str
+    @term_ui.out @getString str
 
   ###*
   * print string in shell with newline
   *###
   println: (str) ->
-    @term_ui.out "#{str}\n"
+    @print(@getString(str)+"\n")
 
   ###*
   * this provides an read line input for the shell
