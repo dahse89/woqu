@@ -3,7 +3,7 @@
         "host": "localhost",
         "dialect": "sqlite",
         "storage": "./tasks.db",
-        "debug_output": true
+        "debug_output": false
     },
     "messages": {
         "nothingTodo": "Nothing todo so far!",

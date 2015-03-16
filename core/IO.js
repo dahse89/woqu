@@ -84,21 +84,34 @@
      */
 
     IO.prototype.printTask = function(task, cb) {
-      var $_, _$, create_date_label, done_at_label, id, ref, task_lable, workLog;
-      create_date_label = this.__date(task.createdAt);
-      task_lable = this.clc.white('Task: #');
-      ref = [this.clc.red('['), this.clc.red(']')], _$ = ref[0], $_ = ref[1];
-      id = this.clc.blue(task.id);
-      done_at_label = task.done_at ? (_$ + "done" + $_ + ": ") + this.__date(task.done_at) : ' ';
-      workLog = '';
-      return task.getLoggedWorks().then((function(_this) {
-        return function(work) {
-          var i, len, w;
-          for (i = 0, len = work.length; i < len; i++) {
-            w = work[i];
+      var Info, LoggedWork, Task, ref;
+      ref = this.master.factory('model/Task', 'model/LoggedWork', 'model/Info'), Task = ref[0], LoggedWork = ref[1], Info = ref[2];
+      return Task.findAll({
+        where: {
+          id: task.id
+        },
+        include: [Info, LoggedWork]
+      }).then((function(_this) {
+        return function(fulltask) {
+          var $_, _$, create_date_label, done_at_label, i, id, info, j, k, len, len1, ref1, ref2, ref3, task_lable, w, workLog;
+          create_date_label = _this.__date(task.createdAt);
+          task_lable = _this.clc.white('Task: #');
+          ref1 = [_this.clc.red('['), _this.clc.red(']')], _$ = ref1[0], $_ = ref1[1];
+          id = _this.clc.blue(task.id);
+          done_at_label = task.done_at ? (_$ + "done" + $_ + ": ") + _this.__date(task.done_at) : ' ';
+          info = '';
+          ref2 = fulltask[0].Infos;
+          for (j = 0, len = ref2.length; j < len; j++) {
+            i = ref2[j];
+            info += " * " + (_this.__date(i.createdAt)) + ": " + i.text + "\n";
+          }
+          workLog = '';
+          ref3 = fulltask[0].LoggedWorks;
+          for (k = 0, len1 = ref3.length; k < len1; k++) {
+            w = ref3[k];
             workLog += "   " + (_this.__date(w.createdAt)) + ": " + w.text + "\n";
           }
-          console.log("" + task_lable + id + " added: " + create_date_label + "\n" + task.description + "\n" + _$ + "postponed" + $_ + ": " + task.postponed + "\n" + done_at_label + "\n" + workLog);
+          _this.println("" + task_lable + id + " added: " + create_date_label + "\n" + task.description + "\n" + info + "\n" + _$ + "postponed" + $_ + ": " + task.postponed + "\n" + done_at_label + "\n" + workLog);
           return cb();
         };
       })(this));
